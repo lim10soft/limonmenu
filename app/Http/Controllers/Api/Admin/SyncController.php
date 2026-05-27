@@ -49,6 +49,12 @@ class SyncController extends Controller
                 }
             }
 
+            // Kategori resmini güncelle
+            $catImage = $p['category_image'] ?? null;
+            if ($catImage && $category->image !== $catImage) {
+                $category->update(['image' => $catImage]);
+            }
+
             $product = Product::withoutGlobalScopes()->updateOrCreate(
                 ['tenant_id' => $tenant->id, 'nexopos_id' => $p['id']],
                 [
