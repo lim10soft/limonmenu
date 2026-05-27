@@ -111,10 +111,14 @@ class AuthController extends Controller
 
     private function ensureIntegrationToken(TenantUser $user): void
     {
-        $tenant = $user->tenant;
-        if ($tenant && ! $tenant->api_token) {
-            $plain = $user->createToken('integration')->plainTextToken;
-            $tenant->update(['api_token' => $plain]);
+        try {
+            $tenant = $user->tenant;
+            if ($tenant && ! $tenant->api_token) {
+                $plain = $user->createToken('integration')->plainTextToken;
+                $tenant->update(['api_token' => $plain]);
+            }
+        } catch (\Throwable) {
+            // Migration henüz çalışmamışsa login'i engelleme
         }
     }
 
