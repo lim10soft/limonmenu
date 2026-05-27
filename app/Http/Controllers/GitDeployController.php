@@ -118,14 +118,30 @@ class GitDeployController extends Controller
         $gitBin      = $config['git_path'] ?? 'git';
         $repoUrl     = $config['repo_url'] ?? null;
 
+        $isGitRepo = is_dir($projectPath . '/.git');
+
         $commands = [];
 
-        if ($repoUrl) {
-            $commands[] = "cd \"{$projectPath}\" && \"{$gitBin}\" remote set-url origin {$repoUrl} 2>&1";
+        if (! $isGitRepo) {
+            if (! $repoUrl) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Git repo bulunamadı. Önce Repo URL girin ve tekrar deneyin.',
+                    'output'  => 'fatal: not a git repository — önce Repo URL kaydedin.',
+                ]);
+            }
+            // İlk kurulum: init + remote + fetch + reset
+            $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" init 2>&1";
+            $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" remote add origin {$repoUrl} 2>&1 || \"{$gitBin}\" -C \"{$projectPath}\" remote set-url origin {$repoUrl} 2>&1";
+            $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" fetch --all 2>&1";
+            $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" reset --hard origin/{$branch} 2>&1";
+        } else {
+            if ($repoUrl) {
+                $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" remote set-url origin {$repoUrl} 2>&1";
+            }
+            $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" fetch --all 2>&1";
+            $commands[] = "\"{$gitBin}\" -C \"{$projectPath}\" reset --hard origin/{$branch} 2>&1";
         }
-
-        $commands[] = "cd \"{$projectPath}\" && \"{$gitBin}\" fetch --all 2>&1";
-        $commands[] = "cd \"{$projectPath}\" && \"{$gitBin}\" reset --hard origin/{$branch} 2>&1";
 
         $output = [];
         $error  = false;
@@ -133,7 +149,7 @@ class GitDeployController extends Controller
         foreach ($commands as $cmd) {
             $result = shell_exec($cmd);
             $output[] = trim($result ?? '');
-            if (str_contains(strtolower($result ?? ''), 'error') || str_contains(strtolower($result ?? ''), 'fatal')) {
+            if (str_contains(strtolower($result ?? ''), 'fatal')) {
                 $error = true;
             }
         }
@@ -142,7 +158,7 @@ class GitDeployController extends Controller
 
         if ($error) {
             Log::error('Git pull hata:', ['output' => $fullOutput]);
-            return response()->json(['success' => false, 'message' => 'Git pull hatası.', 'output' => $fullOutput]);
+            return response()->json(['success' => false, 'message' => 'Git pull hatası.', 'output' => $this->toUtf8($fullOutput)]);
         }
 
         Log::info('Git pull basarili.', ['output' => $fullOutput]);
