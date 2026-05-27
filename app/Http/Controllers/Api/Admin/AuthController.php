@@ -113,12 +113,23 @@ class AuthController extends Controller
     {
         try {
             $tenant = $user->tenant;
-            if ($tenant && ! $tenant->api_token) {
-                $plain = $user->createToken('integration')->plainTextToken;
-                $tenant->update(['api_token' => $plain]);
+            if (! $tenant) return;
+
+            // Stored token still has a live row in personal_access_tokens?
+            if ($tenant->api_token) {
+                $tokenId = (int) explode('|', $tenant->api_token)[0];
+                if ($tokenId > 0 && PersonalAccessToken::where('id', $tokenId)
+                        ->where('name', 'integration')->exists()) {
+                    return; // valid — nothing to do
+                }
             }
+
+            // Missing or invalidated — clean up and recreate
+            $user->tokens()->where('name', 'integration')->delete();
+            $plain = $user->createToken('integration')->plainTextToken;
+            $tenant->update(['api_token' => $plain]);
         } catch (\Throwable) {
-            // Migration henüz çalışmamışsa login'i engelleme
+            // Migration not yet run — don't block login
         }
     }
 
