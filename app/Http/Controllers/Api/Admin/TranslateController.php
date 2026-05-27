@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Http;
 
 class TranslateController extends Controller
 {
-    // MyMemory lang code overrides
-    private const LANG_MAP = ['zh' => 'zh-CN'];
+    // Google Translate uses different codes for some languages
+    private const LANG_MAP = ['zh' => 'zh-CN', 'he' => 'iw'];
 
     public function autoTranslateAll(Request $request)
     {
@@ -23,7 +23,6 @@ class TranslateController extends Controller
 
         $tenant      = $request->user()->tenant;
         $primaryLang = $tenant->primary_lang ?? 'tr';
-        $userEmail   = $request->user()->email ?? 'translate@qrmenu.app';
 
         $targetLangs = TenantLanguage::where('tenant_id', $tenant->id)
             ->where('active', true)
@@ -70,7 +69,7 @@ class TranslateController extends Controller
 
         // ── Kategoriler ──
         foreach ($targetLangs as $lang) {
-            $translated = $this->translateBulk($catNames, $sourceLang, $lang, $userEmail);
+            $translated = $this->translateBulk($catNames, $sourceLang, $lang);
             foreach ($categories as $i => $cat) {
                 $name       = trim($translated[$i] ?? '');
                 $sourceName = trim($catNames[$i] ?? '');
@@ -85,8 +84,8 @@ class TranslateController extends Controller
 
         // ── Ürünler ──
         foreach ($targetLangs as $lang) {
-            $names = $this->translateBulk($prodNames, $sourceLang, $lang, $userEmail);
-            $descs = $this->translateBulk($prodDescs, $sourceLang, $lang, $userEmail);
+            $names = $this->translateBulk($prodNames, $sourceLang, $lang);
+            $descs = $this->translateBulk($prodDescs, $sourceLang, $lang);
             foreach ($products as $i => $product) {
                 $name       = trim($names[$i] ?? '');
                 $sourceName = trim($prodNames[$i] ?? '');
@@ -112,7 +111,7 @@ class TranslateController extends Controller
     public function autoTranslateProducts(Request $request) { return $this->autoTranslateAll($request); }
     public function autoTranslateCategories(Request $request) { return $this->autoTranslateAll($request); }
 
-    private function translateBulk(array $texts, string $from, string $to, string $email): array
+    private function translateBulk(array $texts, string $from, string $to): array
     {
         $fromCode = self::LANG_MAP[$from] ?? $from;
         $toCode   = self::LANG_MAP[$to]   ?? $to;
@@ -133,13 +132,17 @@ class TranslateController extends Controller
         $pendingKeys = array_keys($pending);
 
         try {
-            $responses = Http::pool(function (Pool $pool) use ($pendingList, $fromCode, $toCode, $email) {
+            $responses = Http::pool(function (Pool $pool) use ($pendingList, $fromCode, $toCode) {
                 return array_map(
-                    fn($text) => $pool->timeout(15)->get('https://api.mymemory.translated.net/get', [
-                        'q'        => $text,
-                        'langpair' => "{$fromCode}|{$toCode}",
-                        'de'       => $email,
-                    ]),
+                    fn($text) => $pool->timeout(15)
+                        ->withHeaders(['User-Agent' => 'Mozilla/5.0'])
+                        ->get('https://translate.googleapis.com/translate_a/single', [
+                            'client' => 'gtx',
+                            'sl'     => $fromCode,
+                            'tl'     => $toCode,
+                            'dt'     => 't',
+                            'q'      => $text,
+                        ]),
                     $pendingList
                 );
             });
@@ -155,13 +158,17 @@ class TranslateController extends Controller
             }
             try {
                 if ($response->ok()) {
-                    $data       = $response->json();
-                    $translated = $data['responseData']['translatedText'] ?? null;
-                    if ($translated
-                        && (int)($data['responseStatus'] ?? 0) === 200
-                        && ! str_starts_with((string) $translated, 'MYMEMORY WARNING')
-                    ) {
-                        $results[$originalIndex] = $translated;
+                    $data = $response->json();
+                    // Google returns: [[[translated, source, ...], ...], null, detected_lang]
+                    if (is_array($data) && isset($data[0]) && is_array($data[0])) {
+                        $parts = array_filter(
+                            array_column($data[0], 0),
+                            fn($p) => is_string($p) && $p !== ''
+                        );
+                        $translated = implode('', $parts);
+                        if ($translated !== '') {
+                            $results[$originalIndex] = $translated;
+                        }
                     }
                 }
             } catch (\Exception) {
