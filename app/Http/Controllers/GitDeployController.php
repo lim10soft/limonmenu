@@ -122,6 +122,9 @@ class GitDeployController extends Controller
 
         $commands = [];
 
+        // Ownership sorununun önüne geç (www-data vs root)
+        $commands[] = "\"{$gitBin}\" config --global --add safe.directory \"{$projectPath}\" 2>&1";
+
         if (! $isGitRepo) {
             if (! $repoUrl) {
                 return response()->json([
