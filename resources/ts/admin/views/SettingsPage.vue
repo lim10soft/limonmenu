@@ -194,7 +194,7 @@
           </p>
         </div>
 
-        <div class="flex items-center gap-3 pt-1">
+        <div class="flex flex-wrap items-center gap-3 pt-1">
           <button @click="saveGitConfig" :disabled="savingGit"
             class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold disabled:opacity-60 transition-colors">
             {{ savingGit ? 'Kaydediliyor...' : 'Ayarları Kaydet' }}
@@ -204,8 +204,14 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>
             {{ pulling ? 'Çekiliyor...' : 'Git Pull' }}
           </button>
+          <button @click="runMigrate" :disabled="migrating"
+            class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold disabled:opacity-60 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/></svg>
+            {{ migrating ? 'Çalışıyor...' : 'Migrate Çalıştır' }}
+          </button>
         </div>
         <pre v-if="pullOutput" class="bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs text-gray-700 whitespace-pre-wrap max-h-48 overflow-y-auto">{{ pullOutput }}</pre>
+        <pre v-if="migrateOutput" class="bg-indigo-50 border border-indigo-200 rounded-xl p-3 text-xs text-indigo-800 whitespace-pre-wrap max-h-48 overflow-y-auto">{{ migrateOutput }}</pre>
       </div>
 
       <button v-if="!auth.isAdmin" @click="saveSettings" :disabled="saving" class="w-full py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 disabled:opacity-60 transition-colors">
@@ -241,6 +247,8 @@ const pullOutput = ref('')
 const deploySecret = ref('')
 const savingGit = ref(false)
 const gitConfig = ref({ git_path: '', branch: 'main', repo_url: '' })
+const migrating = ref(false)
+const migrateOutput = ref('')
 
 const maskedToken = computed(() => {
   if (!auth.token) return '—'
@@ -285,15 +293,18 @@ watch(() => auth.tenant, (tenant) => {
   }
 }, { immediate: true })
 
-onMounted(async () => {
-  if (auth.isAdmin) {
+watch(() => auth.isAdmin, async (isAdmin) => {
+  if (isAdmin) {
     try {
       const res = await http.get('/admin/git/config')
       gitConfig.value = { git_path: res.data.git_path ?? '', branch: res.data.branch ?? 'main', repo_url: res.data.repo_url ?? '' }
-    } catch { /* config henüz yok */ }
+    } catch { /* ignore */ }
     langLoading.value = false
-    return
   }
+}, { immediate: true })
+
+onMounted(async () => {
+  if (auth.isAdmin) return
   try {
     const res = await http.get('/admin/languages')
     languages.value = res.data.data
@@ -363,6 +374,22 @@ async function gitPull() {
     toastError(pullOutput.value)
   } finally {
     pulling.value = false
+  }
+}
+
+async function runMigrate() {
+  migrating.value = true
+  migrateOutput.value = ''
+  try {
+    const res = await http.post('/admin/git/migrate')
+    migrateOutput.value = res.data.output || ''
+    if (res.data.success) success('Migrate tamamlandı.')
+    else toastError('Migrate hatası.')
+  } catch (e: any) {
+    migrateOutput.value = e?.response?.data?.message || 'Hata oluştu.'
+    toastError(migrateOutput.value)
+  } finally {
+    migrating.value = false
   }
 }
 

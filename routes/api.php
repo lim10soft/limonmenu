@@ -80,6 +80,7 @@ Route::prefix('admin')->group(function () {
         Route::put('departments/{id}/categories', [DepartmentController::class, 'updateCategories']);
 
         Route::get('reviews', [ReviewController::class, 'index']);
+        Route::get('reviews/export', [ReviewController::class, 'export']);
         Route::delete('reviews/{id}', [ReviewController::class, 'destroy']);
 
         Route::post('upload-image', [ImageUploadController::class, 'upload']);
@@ -96,6 +97,7 @@ Route::prefix('admin')->group(function () {
             Route::delete('tenants/{id}', [AdminTenantController::class, 'destroy']);
             Route::get('git/config', [GitDeployController::class, 'getConfig']);
             Route::post('git/config', [GitDeployController::class, 'saveConfig']);
+            Route::post('git/migrate', [GitDeployController::class, 'migrate']);
         });
     });
 });

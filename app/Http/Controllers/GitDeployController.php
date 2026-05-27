@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GitConfig;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
 class GitDeployController extends Controller
@@ -10,7 +12,12 @@ class GitDeployController extends Controller
     // Git ayarlarını oku
     public function getConfig()
     {
-        return response()->json($this->readConfig());
+        $cfg = GitConfig::current();
+        return response()->json([
+            'git_path' => $cfg->git_path,
+            'branch'   => $cfg->branch,
+            'repo_url' => $cfg->repo_url,
+        ]);
     }
 
     // Git ayarlarını kaydet
@@ -22,10 +29,29 @@ class GitDeployController extends Controller
             'repo_url' => 'nullable|string|max:500',
         ]);
 
-        $path = storage_path('app/git_config.json');
-        file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        GitConfig::updateOrCreate(['id' => 1], $data);
 
-        return response()->json(['message' => 'Git ayarları kaydedildi.']);
+        return response()->json(['success' => true, 'message' => 'Saved.']);
+    }
+
+    // Migrate calistir
+    public function migrate()
+    {
+        try {
+            Artisan::call('migrate', ['--force' => true]);
+            $output  = Artisan::output();
+            $success = true;
+        } catch (\Throwable $e) {
+            $output  = $e->getMessage();
+            $success = false;
+        }
+
+        Log::info('Migrate calistirildi.', ['success' => $success, 'output' => $output]);
+
+        return response()->json([
+            'success' => $success,
+            'output'  => $output,
+        ]);
     }
 
     // Manuel pull — superadmin token ile
@@ -76,11 +102,12 @@ class GitDeployController extends Controller
 
     private function readConfig(): array
     {
-        $path = storage_path('app/git_config.json');
-        if (file_exists($path)) {
-            return json_decode(file_get_contents($path), true) ?? [];
-        }
-        return [];
+        $cfg = GitConfig::current();
+        return [
+            'git_path' => $cfg->git_path,
+            'branch'   => $cfg->branch,
+            'repo_url' => $cfg->repo_url,
+        ];
     }
 
     private function runPull(): \Illuminate\Http\JsonResponse
@@ -118,7 +145,15 @@ class GitDeployController extends Controller
             return response()->json(['success' => false, 'message' => 'Git pull hatası.', 'output' => $fullOutput]);
         }
 
-        Log::info('Git pull başarılı.', ['output' => $fullOutput]);
-        return response()->json(['success' => true, 'message' => 'Güncelleme tamamlandı.', 'output' => $fullOutput]);
+        Log::info('Git pull basarili.', ['output' => $fullOutput]);
+        return response()->json(['success' => true, 'message' => 'Done.', 'output' => $this->toUtf8($fullOutput)]);
+    }
+
+    private function toUtf8(string $text): string
+    {
+        if (mb_detect_encoding($text, 'UTF-8', true)) {
+            return $text;
+        }
+        return mb_convert_encoding($text, 'UTF-8', 'Windows-1252');
     }
 }
