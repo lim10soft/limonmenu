@@ -146,6 +146,9 @@ class TranslateController extends Controller
         $results = $texts;
         foreach ($responses as $j => $response) {
             $originalIndex = $pendingKeys[$j];
+            if (! ($response instanceof \Illuminate\Http\Client\Response)) {
+                continue;
+            }
             try {
                 if ($response->ok()) {
                     $data       = $response->json();
