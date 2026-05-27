@@ -9,7 +9,7 @@ class Tenant extends Model
 {
     protected $fillable = [
         'name', 'slug', 'logo', 'plan', 'theme_color',
-        'nexopos_url', 'nexopos_token', 'active', 'primary_lang',
+        'nexopos_url', 'nexopos_token', 'api_token', 'active', 'primary_lang',
         'tables_enabled', 'orders_enabled', 'currency_code',
         'banner_image', 'instagram_url',
     ];

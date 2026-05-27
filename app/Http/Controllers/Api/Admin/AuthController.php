@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -56,6 +57,9 @@ class AuthController extends Controller
 
         $token = $user->createToken('admin')->plainTextToken;
 
+        // Entegrasyon tokeni — hiç değişmez
+        $this->ensureIntegrationToken($user);
+
         return response()->json([
             'token'   => $token,
             'user'    => $user->only(['id', 'name', 'email', 'role', 'tenant_id']),
@@ -79,25 +83,39 @@ class AuthController extends Controller
             ]);
         }
 
-        $user->tokens()->delete();
+        // Sadece oturum tokenlarını sil, entegrasyon tokenine dokunma
+        $user->tokens()->where('name', 'admin')->delete();
         $token = $user->createToken('admin')->plainTextToken;
 
+        // Entegrasyon tokeni yoksa oluştur
+        $this->ensureIntegrationToken($user);
+
         return response()->json([
-            'token'   => $token,
-            'user'    => $user->only(['id', 'name', 'email', 'role', 'tenant_id']),
-            'tenant'  => $user->tenant,
-            'app_url' => config('app.url'),
+            'token'     => $token,
+            'user'      => $user->only(['id', 'name', 'email', 'role', 'tenant_id']),
+            'tenant'    => $user->tenant->fresh(),
+            'app_url'   => config('app.url'),
         ]);
     }
 
     public function me(Request $request)
     {
         $user = $request->user();
+        $this->ensureIntegrationToken($user);
         return response()->json([
             'user'    => $user->only(['id', 'name', 'email', 'role', 'tenant_id']),
-            'tenant'  => $user->tenant,
+            'tenant'  => $user->tenant->fresh(),
             'app_url' => config('app.url'),
         ]);
+    }
+
+    private function ensureIntegrationToken(TenantUser $user): void
+    {
+        $tenant = $user->tenant;
+        if ($tenant && ! $tenant->api_token) {
+            $plain = $user->createToken('integration')->plainTextToken;
+            $tenant->update(['api_token' => $plain]);
+        }
     }
 
     public function logout(Request $request)
