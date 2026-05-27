@@ -12,6 +12,7 @@ export interface Tenant {
   banner_image: string | null
   instagram_url: string | null
   primary_lang: string
+  api_token?: string | null
   created_at?: string
 }
 

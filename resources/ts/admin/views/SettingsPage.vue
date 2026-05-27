@@ -128,7 +128,7 @@
         </div>
         <div class="flex items-center gap-2 mt-3">
           <code class="flex-1 block bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-xs text-gray-700 font-mono break-all select-all">
-            {{ tokenVisible ? auth.token : maskedToken }}
+            {{ tokenVisible ? auth.tenant?.api_token : maskedToken }}
           </code>
           <button @click="tokenVisible = !tokenVisible" class="shrink-0 p-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors text-gray-500" :title="tokenVisible ? 'Gizle' : 'Göster'">
             <svg v-if="!tokenVisible" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
@@ -251,13 +251,15 @@ const migrating = ref(false)
 const migrateOutput = ref('')
 
 const maskedToken = computed(() => {
-  if (!auth.token) return '—'
-  return auth.token.slice(0, 6) + '•'.repeat(20) + auth.token.slice(-4)
+  const t = auth.tenant?.api_token
+  if (!t) return '—'
+  return t.slice(0, 6) + '•'.repeat(20) + t.slice(-4)
 })
 
 function copyToken() {
-  if (!auth.token) return
-  navigator.clipboard.writeText(auth.token)
+  const t = auth.tenant?.api_token
+  if (!t) return
+  navigator.clipboard.writeText(t)
   copied.value = true
   setTimeout(() => (copied.value = false), 2000)
 }
