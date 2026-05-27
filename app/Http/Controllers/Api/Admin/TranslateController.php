@@ -72,8 +72,9 @@ class TranslateController extends Controller
         foreach ($targetLangs as $lang) {
             $translated = $this->translateBulk($catNames, $sourceLang, $lang, $userEmail);
             foreach ($categories as $i => $cat) {
-                $name = trim($translated[$i] ?? '');
-                if (empty($name)) continue;
+                $name       = trim($translated[$i] ?? '');
+                $sourceName = trim($catNames[$i] ?? '');
+                if (empty($name) || mb_strtolower($name) === mb_strtolower($sourceName)) continue;
                 CategoryTranslation::updateOrCreate(
                     ['category_id' => $cat->id, 'lang_code' => $lang],
                     ['name' => $name]
@@ -87,11 +88,14 @@ class TranslateController extends Controller
             $names = $this->translateBulk($prodNames, $sourceLang, $lang, $userEmail);
             $descs = $this->translateBulk($prodDescs, $sourceLang, $lang, $userEmail);
             foreach ($products as $i => $product) {
-                $name = trim($names[$i] ?? '');
-                if (empty($name)) continue;
+                $name       = trim($names[$i] ?? '');
+                $sourceName = trim($prodNames[$i] ?? '');
+                if (empty($name) || mb_strtolower($name) === mb_strtolower($sourceName)) continue;
+                $desc = trim($descs[$i] ?? '');
+                $sourceDesc = trim($prodDescs[$i] ?? '');
                 ProductTranslation::updateOrCreate(
                     ['product_id' => $product->id, 'lang_code' => $lang],
-                    ['name' => $name, 'description' => trim($descs[$i] ?? '') ?: null]
+                    ['name' => $name, 'description' => ($desc && mb_strtolower($desc) !== mb_strtolower($sourceDesc)) ? $desc : null]
                 );
                 $saved++;
             }
@@ -153,7 +157,10 @@ class TranslateController extends Controller
                 if ($response->ok()) {
                     $data       = $response->json();
                     $translated = $data['responseData']['translatedText'] ?? null;
-                    if ($translated && $data['responseStatus'] === 200) {
+                    if ($translated
+                        && (int)($data['responseStatus'] ?? 0) === 200
+                        && ! str_starts_with((string) $translated, 'MYMEMORY WARNING')
+                    ) {
                         $results[$originalIndex] = $translated;
                     }
                 }
