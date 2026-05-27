@@ -8,7 +8,6 @@ use App\Models\CategoryTranslation;
 use App\Models\Product;
 use App\Models\ProductTranslation;
 use App\Models\TenantLanguage;
-use Illuminate\Http\Client\Pool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -116,11 +115,13 @@ class TranslateController extends Controller
         $fromCode = self::LANG_MAP[$from] ?? $from;
         $toCode   = self::LANG_MAP[$to]   ?? $to;
 
-        // Only send non-empty texts; track original indices
+        // Collect non-empty texts, normalise internal newlines so they don't
+        // collide with the \n separator used for batching.
         $pending = [];
         foreach ($texts as $i => $text) {
-            if (!empty(trim($text))) {
-                $pending[$i] = $text;
+            $clean = trim(str_replace(["\r\n", "\r", "\n"], ' ', $text));
+            if ($clean !== '') {
+                $pending[$i] = $clean;
             }
         }
 
@@ -130,49 +131,56 @@ class TranslateController extends Controller
 
         $pendingList = array_values($pending);
         $pendingKeys = array_keys($pending);
+        $results     = $texts;
 
-        try {
-            $responses = Http::pool(function (Pool $pool) use ($pendingList, $fromCode, $toCode) {
-                return array_map(
-                    fn($text) => $pool->timeout(15)
-                        ->withHeaders(['User-Agent' => 'Mozilla/5.0'])
-                        ->get('https://translate.googleapis.com/translate_a/single', [
-                            'client' => 'gtx',
-                            'sl'     => $fromCode,
-                            'tl'     => $toCode,
-                            'dt'     => 't',
-                            'q'      => $text,
-                        ]),
-                    $pendingList
-                );
-            });
-        } catch (\Exception) {
-            return $texts;
-        }
+        // Send 100 items per request joined by \n — Google preserves line
+        // boundaries, so we get one translated line per source line back.
+        $batches     = array_chunk($pendingList, 100);
+        $batchedKeys = array_chunk($pendingKeys, 100);
 
-        $results = $texts;
-        foreach ($responses as $j => $response) {
-            $originalIndex = $pendingKeys[$j];
-            if (! ($response instanceof \Illuminate\Http\Client\Response)) {
+        foreach ($batches as $bIdx => $batch) {
+            $keys   = $batchedKeys[$bIdx];
+            $joined = implode("\n", $batch);
+
+            try {
+                $response = Http::timeout(30)
+                    ->withHeaders(['User-Agent' => 'Mozilla/5.0'])
+                    ->get('https://translate.googleapis.com/translate_a/single', [
+                        'client' => 'gtx',
+                        'sl'     => $fromCode,
+                        'tl'     => $toCode,
+                        'dt'     => 't',
+                        'q'      => $joined,
+                    ]);
+            } catch (\Exception) {
+                continue; // keep originals for this batch
+            }
+
+            if (! ($response instanceof \Illuminate\Http\Client\Response) || ! $response->ok()) {
                 continue;
             }
+
             try {
-                if ($response->ok()) {
-                    $data = $response->json();
-                    // Google returns: [[[translated, source, ...], ...], null, detected_lang]
-                    if (is_array($data) && isset($data[0]) && is_array($data[0])) {
-                        $parts = array_filter(
-                            array_column($data[0], 0),
-                            fn($p) => is_string($p) && $p !== ''
-                        );
-                        $translated = implode('', $parts);
-                        if ($translated !== '') {
-                            $results[$originalIndex] = $translated;
+                $data = $response->json();
+                // Google returns: [[[chunk, source, ...], ...], null, detected_lang]
+                // Concatenate all translated chunks, then split by \n.
+                if (is_array($data) && isset($data[0]) && is_array($data[0])) {
+                    $parts = array_filter(
+                        array_column($data[0], 0),
+                        fn($p) => is_string($p)
+                    );
+                    $translatedAll   = implode('', $parts);
+                    $translatedLines = explode("\n", $translatedAll);
+
+                    foreach ($keys as $j => $originalIndex) {
+                        $line = trim($translatedLines[$j] ?? '');
+                        if ($line !== '') {
+                            $results[$originalIndex] = $line;
                         }
                     }
                 }
             } catch (\Exception) {
-                // keep original
+                // keep originals for this batch
             }
         }
 
