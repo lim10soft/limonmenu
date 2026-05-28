@@ -93,7 +93,7 @@ class AuthController extends Controller
         return response()->json([
             'token'     => $token,
             'user'      => $user->only(['id', 'name', 'email', 'role', 'tenant_id']),
-            'tenant'    => $user->tenant->fresh(),
+            'tenant'    => $user->tenant?->fresh(),
             'app_url'   => config('app.url'),
         ]);
     }
@@ -104,7 +104,7 @@ class AuthController extends Controller
         $this->ensureIntegrationToken($user);
         return response()->json([
             'user'    => $user->only(['id', 'name', 'email', 'role', 'tenant_id']),
-            'tenant'  => $user->tenant->fresh(),
+            'tenant'  => $user->tenant?->fresh(),
             'app_url' => config('app.url'),
         ]);
     }
