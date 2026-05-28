@@ -164,6 +164,10 @@ class GitDeployController extends Controller
             return response()->json(['success' => false, 'message' => 'Git pull hatası.', 'output' => $this->toUtf8($fullOutput)]);
         }
 
+        // Frontend build
+        $buildResult = shell_exec("cd \"{$projectPath}\" && npm run build 2>&1");
+        $fullOutput .= "\n--- npm run build ---\n" . trim($buildResult ?? '');
+
         Log::info('Git pull basarili.', ['output' => $fullOutput]);
         return response()->json(['success' => true, 'message' => 'Done.', 'output' => $this->toUtf8($fullOutput)]);
     }
