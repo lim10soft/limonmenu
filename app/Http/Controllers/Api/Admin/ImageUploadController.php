@@ -10,19 +10,19 @@ class ImageUploadController extends Controller
 {
     public function upload(Request $request)
     {
-        $request->validate(['image' => 'required|image|max:5120']);
+        $request->validate(['image' => 'required|image|max:51200']);
 
         $tenant = $request->user()->tenant;
         $type   = in_array($request->input('type'), ['products', 'categories', 'tenants'])
             ? $request->input('type')
             : 'uploads';
 
-        $file    = $request->file('image');
-        $folder  = $type . '/' . $tenant->id;
-        $name    = uniqid() . '.' . $file->getClientOriginalExtension();
-        $path    = $folder . '/' . $name;
+        $file   = $request->file('image');
+        $folder = $type . '/' . $tenant->id;
+        $name   = uniqid() . '.' . $file->getClientOriginalExtension();
+        $path   = $folder . '/' . $name;
 
-        Storage::disk('public')->put($path, file_get_contents($file->getPathname()));
+        Storage::disk('public')->putFileAs($folder, $file, $name);
 
         return response()->json([
             'url' => Storage::disk('public')->url($path),
