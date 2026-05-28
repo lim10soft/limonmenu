@@ -358,6 +358,12 @@ watch(panelScrollEl, (el, _, onCleanup) => {
   onCleanup(() => el.removeEventListener('scroll', handler))
 })
 
+watch(() => store.categories, (newCats) => {
+  if (!activeCategory.value) return
+  const fresh = newCats.find(c => c.id === activeCategory.value!.id)
+  if (fresh) activeCategory.value = fresh
+})
+
 function scrollLoop() {
   const y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
   navVisible.value = y > 1
