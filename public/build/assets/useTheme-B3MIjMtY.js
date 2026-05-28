@@ -1,0 +1,1 @@
+import{y as r}from"./http-B0I5wmg8.js";const t="lm_theme";function u(o="dark"){const a=typeof localStorage<"u"?localStorage.getItem(t):null,e=r(a??o);function l(){e.value=e.value==="dark"?"light":"dark",localStorage.setItem(t,e.value)}return{theme:e,toggle:l}}export{u};
