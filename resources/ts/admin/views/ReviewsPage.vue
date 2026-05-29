@@ -61,6 +61,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import http from '@/api/http'
+import { useConfirm } from '../composables/useConfirm'
 
 interface ReviewItem {
   id: number
@@ -72,6 +73,7 @@ interface ReviewItem {
   created_at: string
 }
 
+const { confirm } = useConfirm()
 const reviews = ref<ReviewItem[]>([])
 const loading = ref(true)
 const activeFilter = ref<'all' | 'review' | 'complaint'>('all')
@@ -99,7 +101,7 @@ async function load() {
 }
 
 async function deleteReview(r: ReviewItem) {
-  if (!confirm('Bu kaydı silmek istiyor musunuz?')) return
+  if (!await confirm('Bu kaydı silmek istiyor musunuz?', { title: 'Yorumu Sil', confirmText: 'Sil', type: 'danger' })) return
   await http.delete(`/admin/reviews/${r.id}`)
   reviews.value = reviews.value.filter(x => x.id !== r.id)
 }

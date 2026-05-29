@@ -165,10 +165,12 @@ import type { Category, TenantLanguage } from '@/types'
 import { ADMIN_LANGUAGES } from '../i18n'
 import http from '@/api/http'
 import { useToast } from '../composables/useToast'
+import { useConfirm } from '../composables/useConfirm'
 import ImageUploader from '../components/ImageUploader.vue'
 
 const { t } = useI18n()
 const { success, error: toastError } = useToast()
+const { confirm } = useConfirm()
 const categories = ref<Category[]>([])
 const activeLangs = ref<TenantLanguage[]>([])
 const loading = ref(true)
@@ -258,7 +260,7 @@ async function save() {
 }
 
 async function autoTranslate() {
-  if (!confirm(t('products.auto_translate_confirm'))) return
+  if (!await confirm(t('products.auto_translate_confirm'), { title: t('products.auto_translate'), confirmText: 'Evet', type: 'warning' })) return
   translating.value = true
   try {
     const res = await http.post('/admin/categories/auto-translate')
@@ -279,7 +281,7 @@ async function toggleActive(cat: Category) {
 }
 
 async function deleteCategory(id: number) {
-  if (!confirm(t('categories.confirm_delete'))) return
+  if (!await confirm(t('categories.confirm_delete'), { title: t('categories.title'), confirmText: t('common.delete'), type: 'danger' })) return
   await http.delete(`/admin/categories/${id}`)
   await fetchCategories()
 }

@@ -120,6 +120,7 @@
     </main>
 
   </div>
+  <ConfirmDialog />
 </template>
 
 <script setup lang="ts">
@@ -128,6 +129,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../stores/authStore'
 import AdminLangSwitcher from '../components/AdminLangSwitcher.vue'
+import ConfirmDialog from '../components/ConfirmDialog.vue'
 import { useTheme } from '../composables/useTheme'
 
 const { t } = useI18n()

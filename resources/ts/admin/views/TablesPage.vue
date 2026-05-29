@@ -66,9 +66,11 @@ import QRCode from 'qrcode'
 import type { QrTable } from '@/types'
 import http from '@/api/http'
 import { useAuthStore } from '../stores/authStore'
+import { useConfirm } from '../composables/useConfirm'
 
 const { t } = useI18n()
 const auth = useAuthStore()
+const { confirm } = useConfirm()
 const tables = ref<QrTable[]>([])
 const loading = ref(true)
 const showAddModal = ref(false)
@@ -115,7 +117,7 @@ async function toggleTable(table: QrTable) {
 }
 
 async function deleteTable(id: number) {
-  if (!confirm(t('tables.confirm_delete'))) return
+  if (!await confirm(t('tables.confirm_delete'), { title: t('tables.title'), confirmText: t('common.delete'), type: 'danger' })) return
   await http.delete(`/admin/tables/${id}`)
   tables.value = tables.value.filter((t) => t.id !== id)
 }

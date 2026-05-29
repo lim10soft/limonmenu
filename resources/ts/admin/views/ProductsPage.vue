@@ -359,10 +359,12 @@ import type { Product, Category, TenantLanguage, Department } from '@/types'
 import { ADMIN_LANGUAGES } from '../i18n'
 import http from '@/api/http'
 import { useToast } from '../composables/useToast'
+import { useConfirm } from '../composables/useConfirm'
 import ImageUploader from '../components/ImageUploader.vue'
 
 const { t } = useI18n()
 const { success, error: toastError } = useToast()
+const { confirm } = useConfirm()
 
 const products = ref<Product[]>([])
 const categories = ref<Category[]>([])
@@ -575,7 +577,7 @@ async function saveProduct() {
 }
 
 async function autoTranslate() {
-  if (!confirm(t('products.auto_translate_confirm'))) return
+  if (!await confirm(t('products.auto_translate_confirm'), { title: t('products.auto_translate'), confirmText: 'Evet', type: 'warning' })) return
   translating.value = true
   try {
     const res = await http.post('/admin/products/auto-translate')
@@ -600,7 +602,7 @@ async function toggleInStock(p: Product) {
 }
 
 async function deleteProduct(id: number) {
-  if (!confirm(t('products.confirm_delete'))) return
+  if (!await confirm(t('products.confirm_delete'), { title: t('products.title'), confirmText: t('common.delete'), type: 'danger' })) return
   await http.delete(`/admin/products/${id}`)
   await loadProducts()
 }

@@ -257,10 +257,12 @@ import { useAuthStore } from '../stores/authStore'
 import type { Department, DepartmentProduct, DepartmentCategoryItem } from '@/types'
 import http from '@/api/http'
 import { useToast } from '../composables/useToast'
+import { useConfirm } from '../composables/useConfirm'
 
 const { t } = useI18n()
 const auth = useAuthStore()
 const { success } = useToast()
+const { confirm } = useConfirm()
 
 const departments = ref<Department[]>([])
 const loading = ref(true)
@@ -369,7 +371,7 @@ async function toggleActive(dept: Department) {
 }
 
 async function deleteDept(dept: Department) {
-  if (!confirm(t('departments.confirm_delete'))) return
+  if (!await confirm(t('departments.confirm_delete'), { title: t('departments.title') ?? 'Departmanlar', confirmText: t('common.delete'), type: 'danger' })) return
   await http.delete(`/admin/departments/${dept.id}`)
   departments.value = departments.value.filter(d => d.id !== dept.id)
 }
