@@ -13,10 +13,18 @@ use App\Http\Controllers\Api\Admin\SettingsController;
 use App\Http\Controllers\Api\Admin\TableController;
 use App\Http\Controllers\Api\Admin\TranslateController;
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\WebhookController;
 use App\Http\Controllers\GitDeployController;
 use App\Http\Controllers\Api\Admin\SyncController;
 use App\Http\Controllers\Api\Admin\ImageUploadController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| NexoPOS Webhook (public — token auth kontrolü controller'da)
+|--------------------------------------------------------------------------
+*/
+Route::post('/nexopos/webhook/product', [WebhookController::class, 'nexoposProduct']);
 
 /*
 |--------------------------------------------------------------------------
