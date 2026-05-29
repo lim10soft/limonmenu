@@ -30,6 +30,7 @@
     auto_translate_confirm: 'Alle Produkte werden automatisch von der Hauptsprache in alle aktiven Sprachen übersetzt. Bestehende Übersetzungen werden aktualisiert. Fortfahren?',
     auto_translate_done: '{count} Übersetzungen für {langs} Sprachen hinzugefügt/aktualisiert.',
     auto_translate_error: 'Automatische Übersetzung fehlgeschlagen.',
+    total_count: 'Produkte', no_results: 'Keine Ergebnisse.', empty: 'Noch keine Produkte.',
     edit_title: 'Produkt bearbeiten', add_title: 'Neues Produkt',
     name: 'Standardname *', category: 'Kategorie *',
     price: 'Preis (₺) *', description: 'Standardbeschreibung', image_url: 'Bild-URL',

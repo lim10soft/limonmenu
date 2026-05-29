@@ -30,6 +30,7 @@
     auto_translate_confirm: 'すべての商品がメイン言語からすべてのアクティブ言語に自動翻訳されます。既存の翻訳は更新されます。続けますか？',
     auto_translate_done: '{langs}言語に{count}件の翻訳を追加/更新しました。',
     auto_translate_error: '自動翻訳に失敗しました。',
+    total_count: '件の商品', no_results: '結果なし。', empty: '商品がまだありません。',
     edit_title: '商品を編集', add_title: '新しい商品',
     name: 'デフォルト名 *', category: 'カテゴリ *',
     price: '価格 (₺) *', description: 'デフォルト説明', image_url: '画像URL',

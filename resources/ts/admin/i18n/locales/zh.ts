@@ -30,6 +30,7 @@
     auto_translate_confirm: '所有产品将从主要语言自动翻译为所有活跃语言，现有翻译将被更新。是否继续？',
     auto_translate_done: '已为 {langs} 种语言添加/更新 {count} 条翻译。',
     auto_translate_error: '自动翻译失败。',
+    total_count: '个产品', no_results: '未找到结果。', empty: '暂无产品。',
     edit_title: '编辑产品', add_title: '新产品',
     name: '默认名称 *', category: '分类 *',
     price: '价格 (₺) *', description: '默认描述', image_url: '图片链接',

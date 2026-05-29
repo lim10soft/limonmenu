@@ -30,6 +30,7 @@
     auto_translate_confirm: 'Tutti i prodotti verranno tradotti automaticamente dalla lingua principale in tutte le lingue attive. Le traduzioni esistenti verranno aggiornate. Continuare?',
     auto_translate_done: '{count} traduzioni aggiunte/aggiornate per {langs} lingue.',
     auto_translate_error: 'Traduzione automatica fallita.',
+    total_count: 'prodotti', no_results: 'Nessun risultato.', empty: 'Nessun prodotto aggiunto.',
     edit_title: 'Modifica prodotto', add_title: 'Nuovo prodotto',
     name: 'Nome predefinito *', category: 'Categoria *',
     price: 'Prezzo (₺) *', description: 'Descrizione predefinita', image_url: 'URL immagine',

@@ -15,14 +15,27 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $tenant = $request->user()->tenant;
-        $products = Product::withoutGlobalScopes()
+        $query = Product::withoutGlobalScopes()
             ->where('tenant_id', $tenant->id)
             ->with(['category', 'translations', 'units'])
-            ->orderBy('name')
-            ->get()
-            ->map(fn($p) => $this->format($p));
+            ->orderBy('name');
 
-        return response()->json(['data' => $products]);
+        if ($search = trim($request->get('search', ''))) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        $perPage = min((int) $request->get('per_page', 20), 100);
+        $paginator = $query->paginate($perPage);
+
+        return response()->json([
+            'data' => collect($paginator->items())->map(fn($p) => $this->format($p))->values(),
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'last_page'    => $paginator->lastPage(),
+                'total'        => $paginator->total(),
+                'per_page'     => $paginator->perPage(),
+            ],
+        ]);
     }
 
     public function store(Request $request)
