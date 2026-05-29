@@ -87,6 +87,17 @@ class SyncController extends Controller
         return response()->json(['synced' => $synced]);
     }
 
+    public function deleteByNexoposId(Request $request, int $nexoposId)
+    {
+        $tenant  = $request->user()->tenant;
+        $deleted = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('nexopos_id', $nexoposId)
+            ->delete();
+
+        return response()->json(['success' => true, 'deleted' => $deleted]);
+    }
+
     public function uploadImage(Request $request, $nexoposId)
     {
         $request->validate(['image' => 'required|image|max:5120']);

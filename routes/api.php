@@ -95,6 +95,7 @@ Route::prefix('admin')->group(function () {
 
         Route::post('sync/receive', [SyncController::class, 'receive']);
         Route::post('sync/upload-image/{nexoposId}', [SyncController::class, 'uploadImage']);
+        Route::delete('sync/product/{nexoposId}', [SyncController::class, 'deleteByNexoposId']);
 
         Route::post('git/pull', [GitDeployController::class, 'pull']);
 
