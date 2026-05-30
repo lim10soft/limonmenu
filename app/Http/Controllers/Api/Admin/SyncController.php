@@ -67,6 +67,7 @@ class SyncController extends Controller
                     'image'       => $p['image'] ?? null,
                     'active'      => isset($p['visible']) ? (bool) $p['visible'] : true,
                     'in_stock'    => ($p['status'] ?? 'available') === 'available' ? 1 : 0,
+                    'is_featured' => (bool) ($p['is_featured'] ?? false),
                 ]
             );
 
