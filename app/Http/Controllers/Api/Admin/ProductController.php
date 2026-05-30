@@ -17,7 +17,7 @@ class ProductController extends Controller
         $tenant = $request->user()->tenant;
         $query = Product::withoutGlobalScopes()
             ->where('tenant_id', $tenant->id)
-            ->with(['category', 'translations', 'units'])
+            ->with(['category', 'translations', 'units', 'departmentOverrides'])
             ->orderBy('name');
 
         if ($search = trim($request->get('search', ''))) {
@@ -89,7 +89,7 @@ class ProductController extends Controller
         $this->saveDepartmentPrices($product->id, $request->user()->tenant_id, $data['department_prices'] ?? []);
         $this->saveUnits($product->id, $data['units'] ?? []);
 
-        return response()->json(['data' => $this->format($product->load(['category','translations','units']))], 201);
+        return response()->json(['data' => $this->format($product->load(['category','translations','units','departmentOverrides']))], 201);
     }
 
     public function update(Request $request, int $id)
@@ -144,7 +144,7 @@ class ProductController extends Controller
             $this->saveUnits($product->id, $data['units']);
         }
 
-        return response()->json(['data' => $this->format($product->load(['category','translations','units']))]);
+        return response()->json(['data' => $this->format($product->load(['category','translations','units','departmentOverrides']))]);
     }
 
     public function destroy(Request $request, int $id)
@@ -230,9 +230,12 @@ class ProductController extends Controller
             'has_pork'      => $p->has_pork,
             'category_id'   => $p->category_id,
             'category'      => $p->category ? ['id' => $p->category->id, 'name' => $p->category->name] : null,
-            'translations'  => $p->translationsKeyed(),
-            'units'         => $p->relationLoaded('units')
+            'translations'      => $p->translationsKeyed(),
+            'units'             => $p->relationLoaded('units')
                 ? $p->units->map(fn($u) => ['id' => $u->id, 'label' => $u->label, 'price' => $u->price, 'sort_order' => $u->sort_order])->values()
+                : [],
+            'department_prices' => $p->relationLoaded('departmentOverrides')
+                ? $p->departmentOverrides->map(fn($o) => ['department_id' => $o->department_id, 'price' => $o->price])->values()
                 : [],
         ];
     }

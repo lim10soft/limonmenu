@@ -504,10 +504,16 @@ function openModal(p?: Product) {
       }
     })
   }
+  const existingPrices: Record<number, number | null> = {}
+  if (p?.department_prices) {
+    for (const dp of p.department_prices as { department_id: number; price: number | null }[]) {
+      existingPrices[dp.department_id] = dp.price
+    }
+  }
   const department_prices: DeptPrice[] = departments.value.map((d) => ({
     department_id: d.id,
     name: d.name,
-    price: null,
+    price: existingPrices[d.id] ?? null,
   }))
   form.value = {
     name: p?.name ?? '',

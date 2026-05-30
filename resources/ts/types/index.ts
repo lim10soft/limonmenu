@@ -112,6 +112,7 @@ export interface Product {
   category?: Category
   translations?: Record<string, ProductTranslation>
   units?: ProductUnit[]
+  department_prices?: { department_id: number; price: number | null }[]
 }
 
 export interface CartItem {

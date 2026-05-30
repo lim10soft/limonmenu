@@ -42,6 +42,11 @@ class Product extends Model
         return $this->hasMany(ProductUnit::class)->orderBy('sort_order');
     }
 
+    public function departmentOverrides()
+    {
+        return $this->hasMany(DepartmentProductOverride::class);
+    }
+
     public function translationsKeyed(): array
     {
         return $this->translations->keyBy('lang_code')
