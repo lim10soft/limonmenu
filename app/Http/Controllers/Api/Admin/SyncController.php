@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Department;
+use App\Models\DepartmentProductOverride;
 use App\Models\Product;
 use App\Models\ProductUnit;
 use Illuminate\Http\Request;
@@ -78,6 +80,22 @@ class SyncController extends Controller
                         'price'      => (float) ($unit['price'] ?? 0),
                         'sort_order' => $i,
                     ]);
+                }
+            }
+
+            // 2. departman fiyatı — wholesale_price varsa
+            $wholesalePrice = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : null;
+            if ($wholesalePrice !== null && $wholesalePrice > 0) {
+                $secondDept = Department::withoutGlobalScopes()
+                    ->where('tenant_id', $tenant->id)
+                    ->orderBy('sort_order')
+                    ->skip(1)->take(1)->first();
+
+                if ($secondDept) {
+                    DepartmentProductOverride::updateOrCreate(
+                        ['department_id' => $secondDept->id, 'product_id' => $product->id],
+                        ['price' => $wholesalePrice, 'hidden' => false]
+                    );
                 }
             }
 
