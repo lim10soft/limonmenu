@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Tenant;
 use App\Models\TenantLanguage;
 use App\Models\TenantUser;
@@ -35,9 +36,18 @@ class AuthController extends Controller
             'plan'            => 'free',
             'theme_color'     => '#f97316',
             'active'          => true,
-            'tables_enabled'  => true,
-            'orders_enabled'  => true,
+            'tables_enabled'  => false,
+            'orders_enabled'  => false,
             'primary_lang'    => 'tr',
+        ]);
+
+        // Varsayılan "Menü" departmanı
+        Department::create([
+            'tenant_id'        => $tenant->id,
+            'name'             => 'Menü',
+            'active'           => true,
+            'sort_order'       => 1,
+            'price_multiplier' => 1.00,
         ]);
 
         TenantLanguage::create([
