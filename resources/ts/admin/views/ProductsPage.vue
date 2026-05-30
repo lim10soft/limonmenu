@@ -238,6 +238,17 @@
             </button>
           </div>
 
+          <!-- Önerilen Ürün -->
+          <div class="flex items-center justify-between p-3 bg-amber-50 rounded-xl border border-amber-100">
+            <div>
+              <p class="text-sm font-medium text-gray-700">⭐ {{ t('products.featured_label') }}</p>
+              <p class="text-xs text-gray-400">{{ t('products.featured_desc') }}</p>
+            </div>
+            <button type="button" @click="form.is_featured = !form.is_featured" class="relative w-11 h-6 rounded-full transition-colors" :class="form.is_featured ? 'bg-amber-400' : 'bg-gray-300'">
+              <span class="absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform" :class="form.is_featured ? 'right-1' : 'left-1'"></span>
+            </button>
+          </div>
+
           <!-- Besin ve Yasal Uyumluluk -->
           <div class="border border-gray-200 rounded-xl overflow-hidden">
             <div class="px-3 py-2 bg-gray-50 border-b border-gray-200">
@@ -435,6 +446,7 @@ const form = ref({
   is_vegetarian: false,
   has_alcohol: false,
   has_pork: false,
+  is_featured: false,
   translations: {} as Record<string, { name: string; description: string }>,
   department_prices: [] as DeptPrice[],
   units: [] as UnitRow[],
@@ -529,6 +541,7 @@ function openModal(p?: Product) {
     is_vegetarian: p?.is_vegetarian ?? false,
     has_alcohol: p?.has_alcohol ?? false,
     has_pork: p?.has_pork ?? false,
+    is_featured: p?.is_featured ?? false,
     translations,
     department_prices,
     units: (p?.units ?? []).map((u, i) => ({ label: u.label ?? '', price: u.price, sort_order: u.sort_order ?? i })),
@@ -562,6 +575,7 @@ async function saveProduct() {
       is_vegetarian: form.value.is_vegetarian,
       has_alcohol: form.value.has_alcohol,
       has_pork: form.value.has_pork,
+      is_featured: form.value.is_featured,
       translations: Object.entries(form.value.translations).map(([lang_code, tr]) => ({
         lang_code, name: tr.name, description: tr.description || null,
       })),

@@ -40,6 +40,7 @@
     auto_translate_done: '{count} çeviri {langs} dile eklendi/güncellendi.',
     auto_translate_error: 'Otomatik çeviri başarısız oldu.',
     search_placeholder: 'Ürün ara...',
+    featured: 'Önerilen', featured_label: 'Önerilen Ürün', featured_desc: 'Müşteri menüsünde "Önerilen & Kampanya" bölümünde gösterilir.',
     total_count: 'ürün', no_results: 'Arama sonucu bulunamadı.', empty: 'Henüz ürün eklenmedi.',
     edit_title: 'Ürünü Düzenle', add_title: 'Yeni Ürün',
     name: 'Varsayılan Ad *', category: 'Kategori *',

@@ -41,6 +41,7 @@
     auto_translate_done: '{count} translations added/updated for {langs} languages.',
     auto_translate_error: 'Auto translation failed.',
     search_placeholder: 'Search products...',
+    featured: 'Featured', featured_label: 'Featured Product', featured_desc: 'Shown in the "Recommended & Campaigns" section on the customer menu.',
     total_count: 'products', no_results: 'No results found.', empty: 'No products added yet.',
     edit_title: 'Edit Product', add_title: 'New Product',
     name: 'Default Name *', category: 'Category *',

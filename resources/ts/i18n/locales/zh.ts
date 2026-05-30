@@ -10,6 +10,7 @@
     invalidQr: '此二维码无效或已过期。',
     notFound: '页面未找到',
     backToMenu: '返回菜单',
+    featured: '推荐 & 优惠',
   },
   review: {
     rate_us: '为我们的餐厅评分',

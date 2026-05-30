@@ -81,28 +81,119 @@
     <!-- ── Kategori Grid ── -->
     <div class="w-full px-2 pt-2" style="padding-bottom: 110px;">
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-        <div
-          v-for="(cat, i) in store.categories"
-          :key="cat.id"
-          @click="openCategory(cat)"
-          :style="{
-            position: 'relative',
-            overflow: 'hidden',
-            borderRadius: '10px',
-            height: '150px',
-            cursor: 'pointer',
-            gridColumn: i % 3 === 0 ? '1 / -1' : undefined
-          }"
-        >
-          <img v-if="cat.image" :src="cat.image" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-          <div v-else style="position:absolute;inset:0;" :style="{ background: store.tenant?.theme_color || '#f97316' }"></div>
-          <div style="position:absolute;inset:0;background:rgba(0,0,0,0.38);"></div>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0 8px;">
-            <span style="color:#fff;font-weight:700;text-transform:uppercase;text-align:center;font-size:13px;letter-spacing:0.1em;text-shadow:0 1px 6px rgba(0,0,0,0.9);line-height:1.3;">{{ cat.name }}</span>
+        <template v-for="(item, i) in gridItems" :key="item.type === 'featured' ? 'featured' : item.data!.id">
+
+          <!-- Önerilen & Kampanya Kartı -->
+          <div
+            v-if="item.type === 'featured'"
+            @click="openFeatured"
+            :style="{
+              position: 'relative', overflow: 'hidden', borderRadius: '10px',
+              height: '150px', cursor: 'pointer',
+              gridColumn: i % 3 === 0 ? '1 / -1' : undefined,
+              background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)'
+            }"
+          >
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.15);"></div>
+            <!-- dekoratif çember -->
+            <div style="position:absolute;top:-20px;right:-20px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.12);"></div>
+            <div style="position:absolute;bottom:-30px;left:-15px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;">
+              <span style="font-size:28px;line-height:1;">⭐</span>
+              <span style="color:#fff;font-weight:800;text-transform:uppercase;text-align:center;font-size:13px;letter-spacing:0.1em;text-shadow:0 1px 6px rgba(0,0,0,0.6);line-height:1.3;">{{ t('menu.featured') }}</span>
+              <span style="color:rgba(255,255,255,0.85);font-size:10px;font-weight:500;background:rgba(0,0,0,0.2);border-radius:20px;padding:2px 10px;">{{ store.featuredProducts.length }} ürün</span>
+            </div>
           </div>
-        </div>
+
+          <!-- Normal Kategori Kartı -->
+          <div
+            v-else
+            @click="openCategory(item.data!)"
+            :style="{
+              position: 'relative', overflow: 'hidden', borderRadius: '10px',
+              height: '150px', cursor: 'pointer',
+              gridColumn: i % 3 === 0 ? '1 / -1' : undefined
+            }"
+          >
+            <img v-if="item.data!.image" :src="item.data!.image" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
+            <div v-else style="position:absolute;inset:0;" :style="{ background: store.tenant?.theme_color || '#f97316' }"></div>
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.38);"></div>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0 8px;">
+              <span style="color:#fff;font-weight:700;text-transform:uppercase;text-align:center;font-size:13px;letter-spacing:0.1em;text-shadow:0 1px 6px rgba(0,0,0,0.9);line-height:1.3;">{{ item.data!.name }}</span>
+            </div>
+          </div>
+
+        </template>
       </div>
     </div>
+
+    <!-- ── ÖNERİLEN PANEL ── -->
+    <Transition name="panel">
+      <div v-if="showFeatured" class="fixed inset-0 z-40" style="background:#faeee0;">
+
+        <Transition name="topbar">
+          <div v-if="featuredNavVisible" class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4" style="height:50px; background:rgba(22,19,15,0.94); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,0.07);">
+            <button @click="closeFeatured" class="flex items-center gap-1 text-white font-semibold" style="font-size:13px; background:none; border:none; cursor:pointer; padding:0;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+              </svg>
+              {{ t('menu.backToMenu') }}
+            </button>
+            <LangSwitcher />
+          </div>
+        </Transition>
+
+        <div ref="featuredScrollEl" class="absolute inset-0 overflow-y-auto" style="padding-bottom:110px;">
+
+          <!-- Hero -->
+          <div class="relative w-full" style="height:220px; background:linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
+            <div style="position:absolute;top:-40px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.1);"></div>
+            <div style="position:absolute;bottom:-50px;left:-20px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);"></div>
+            <div class="absolute inset-0" style="background:linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.5) 100%);"></div>
+
+            <button @click="closeFeatured" class="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full text-white font-semibold px-3 py-1.5" style="background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);font-size:12px;">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+              </svg>
+              {{ t('menu.backToMenu') }}
+            </button>
+
+            <div class="absolute bottom-0 left-0 right-0 pb-3 flex justify-center">
+              <span class="text-white font-bold uppercase px-5 py-1.5 rounded-full" style="background:rgba(0,0,0,0.35);backdrop-filter:blur(4px);font-size:13px;letter-spacing:0.12em;">⭐ {{ t('menu.featured') }}</span>
+            </div>
+          </div>
+
+          <!-- Ürünler -->
+          <div class="w-full px-3 pt-3">
+            <MenuProductCardLarge
+              v-for="product in store.featuredProducts"
+              :key="product.id"
+              :product="product"
+              :theme-color="store.tenant?.theme_color"
+              :orders-enabled="store.tenant?.orders_enabled ?? false"
+              @add="handleAdd"
+            />
+          </div>
+        </div>
+
+        <!-- Sepet butonu -->
+        <div v-if="store.tenant?.orders_enabled && store.cartCount > 0" class="fixed inset-x-0 z-50 px-3" style="bottom:56px;">
+          <div class="max-w-lg mx-auto">
+            <button @click="showCart = true" class="w-full py-3 px-5 rounded-xl text-white font-bold flex items-center justify-between shadow-xl" :style="{ backgroundColor: store.tenant?.theme_color || '#f97316' }">
+              <span class="bg-white/25 rounded-lg px-2 py-0.5 text-sm font-bold">{{ store.cartCount }}</span>
+              <span>{{ t('cart.viewCart') }}</span>
+              <span>{{ formatPrice(store.cartTotal) }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alt navbar -->
+        <div class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between px-4" style="height:52px; background:rgba(22,19,15,0.92); backdrop-filter:blur(8px); border-top:1px solid rgba(255,255,255,0.06);">
+          <img :src="'/limonlogo.png'" style="height:26px; width:auto; object-fit:contain;" alt="Limon POS" />
+        </div>
+
+      </div>
+    </Transition>
 
     <!-- ── Sepet butonu (alt navbar'ın üstünde) ── -->
     <div
@@ -345,15 +436,34 @@ const displayBanner = computed(() => store.department?.banner_image || store.ten
 
 const showCart = ref(false)
 const showReview = ref(false)
+const showFeatured = ref(false)
 const activeCategory = ref<Category | null>(null)
 const navVisible = ref(false)
 const panelNavVisible = ref(false)
+const featuredNavVisible = ref(false)
 const panelScrollEl = ref<HTMLElement | null>(null)
+const featuredScrollEl = ref<HTMLElement | null>(null)
 let rafId = 0
+
+type GridItem = { type: 'category'; data: Category } | { type: 'featured'; data: null }
+const gridItems = computed<GridItem[]>(() => {
+  const cats: GridItem[] = store.categories.map(c => ({ type: 'category', data: c }))
+  if (store.featuredProducts.length === 0) return cats
+  const result = [...cats]
+  result.splice(2, 0, { type: 'featured', data: null })
+  return result
+})
 
 watch(panelScrollEl, (el, _, onCleanup) => {
   if (!el) return
   const handler = () => { panelNavVisible.value = el.scrollTop > 50 }
+  el.addEventListener('scroll', handler, { passive: true })
+  onCleanup(() => el.removeEventListener('scroll', handler))
+})
+
+watch(featuredScrollEl, (el, _, onCleanup) => {
+  if (!el) return
+  const handler = () => { featuredNavVisible.value = el.scrollTop > 50 }
   el.addEventListener('scroll', handler, { passive: true })
   onCleanup(() => el.removeEventListener('scroll', handler))
 })
@@ -391,6 +501,17 @@ onUnmounted(() => {
 function openCategory(cat: Category) {
   activeCategory.value = cat
   document.body.style.overflow = 'hidden'
+}
+
+function openFeatured() {
+  showFeatured.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+function closeFeatured() {
+  showFeatured.value = false
+  featuredNavVisible.value = false
+  document.body.style.overflow = ''
 }
 
 function closePanel() {

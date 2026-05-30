@@ -10,6 +10,7 @@
     invalidQr: 'This QR code is invalid or expired.',
     notFound: 'Page Not Found',
     backToMenu: 'Back to Menu',
+    featured: 'Featured & Deals',
   },
   review: {
     rate_us: 'Rate our restaurant',

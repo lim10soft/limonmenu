@@ -108,6 +108,7 @@ export interface Product {
   is_vegetarian: boolean
   has_alcohol: boolean
   has_pork: boolean
+  is_featured?: boolean
   hidden?: boolean
   category?: Category
   translations?: Record<string, ProductTranslation>

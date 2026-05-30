@@ -9,6 +9,7 @@ export const useMenuStore = defineStore('menu', () => {
   const table = ref<QrTable | null>(null)
   const department = ref<{ id: number; name: string; display_name: string | null; logo: string | null; banner_image: string | null } | null>(null)
   const categories = ref<Category[]>([])
+  const featuredProducts = ref<Product[]>([])
   const cart = ref<CartItem[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -52,6 +53,7 @@ export const useMenuStore = defineStore('menu', () => {
       table.value = res.data.table
       department.value = res.data.department
       categories.value = res.data.categories
+      featuredProducts.value = res.data.featured_products ?? []
       activeLanguages.value = res.data.active_languages ?? []
       if (res.data.lang) {
         currentLang.value = res.data.lang
@@ -117,7 +119,7 @@ export const useMenuStore = defineStore('menu', () => {
   }
 
   return {
-    tenant, table, department, categories, cart, loading, error,
+    tenant, table, department, categories, featuredProducts, cart, loading, error,
     activeLanguages, currentLang,
     cartTotal, cartCount,
     loadMenu, reloadWithLang, addToCart, removeFromCart, updateQuantity, clearCart, submitOrder,

@@ -10,6 +10,7 @@
     invalidQr: 'Este código QR es inválido o ha expirado.',
     notFound: 'Página No Encontrada',
     backToMenu: 'Volver al menú',
+    featured: 'Recomendados & Ofertas',
   },
   review: {
     rate_us: 'Valora nuestro restaurante',

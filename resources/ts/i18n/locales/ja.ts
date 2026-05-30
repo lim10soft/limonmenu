@@ -10,6 +10,7 @@
     invalidQr: 'このQRコードは無効または期限切れです。',
     notFound: 'ページが見つかりません',
     backToMenu: 'メニューに戻る',
+    featured: 'おすすめ & キャンペーン',
   },
   review: {
     rate_us: 'レストランを評価する',

@@ -54,6 +54,7 @@ class ProductController extends Controller
             'is_vegetarian'=> 'boolean',
             'has_alcohol'  => 'boolean',
             'has_pork'     => 'boolean',
+            'is_featured'  => 'boolean',
             'translations' => 'array',
             'translations.*.lang_code'   => 'required|string|max:10',
             'translations.*.name'        => 'nullable|string|max:150',
@@ -83,6 +84,7 @@ class ProductController extends Controller
             'is_vegetarian'=> $data['is_vegetarian'] ?? false,
             'has_alcohol'  => $data['has_alcohol'] ?? false,
             'has_pork'     => $data['has_pork'] ?? false,
+            'is_featured'  => $data['is_featured'] ?? false,
         ]);
 
         $this->saveTranslations($product->id, $data['translations'] ?? []);
@@ -114,6 +116,7 @@ class ProductController extends Controller
             'is_vegetarian'=> 'boolean',
             'has_alcohol'  => 'boolean',
             'has_pork'     => 'boolean',
+            'is_featured'  => 'boolean',
             'translations' => 'array',
             'translations.*.lang_code'   => 'required|string|max:10',
             'translations.*.name'        => 'nullable|string|max:150',
@@ -128,7 +131,7 @@ class ProductController extends Controller
         ]);
 
         $fields = ['name','category_id','description','price','image','active','in_stock',
-                   'calories','ingredients','allergens','is_vegan','is_vegetarian','has_alcohol','has_pork'];
+                   'calories','ingredients','allergens','is_vegan','is_vegetarian','has_alcohol','has_pork','is_featured'];
         $update = array_intersect_key($data, array_flip($fields));
         $product->update($update);
 
@@ -228,6 +231,7 @@ class ProductController extends Controller
             'is_vegetarian' => $p->is_vegetarian,
             'has_alcohol'   => $p->has_alcohol,
             'has_pork'      => $p->has_pork,
+            'is_featured'   => $p->is_featured,
             'category_id'   => $p->category_id,
             'category'      => $p->category ? ['id' => $p->category->id, 'name' => $p->category->name] : null,
             'translations'      => $p->translationsKeyed(),

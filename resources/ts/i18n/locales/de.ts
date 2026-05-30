@@ -10,6 +10,7 @@
     invalidQr: 'Dieser QR-Code ist ungültig oder abgelaufen.',
     notFound: 'Seite nicht gefunden',
     backToMenu: 'Zurück zur Speisekarte',
+    featured: 'Empfehlungen & Angebote',
   },
   review: {
     rate_us: 'Bewerten Sie unser Restaurant',

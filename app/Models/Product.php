@@ -13,7 +13,7 @@ class Product extends Model
         'tenant_id', 'category_id', 'name', 'description',
         'price', 'image', 'active', 'nexopos_id',
         'in_stock', 'calories', 'ingredients', 'allergens',
-        'is_vegan', 'is_vegetarian', 'has_alcohol', 'has_pork',
+        'is_vegan', 'is_vegetarian', 'has_alcohol', 'has_pork', 'is_featured',
     ];
 
     protected $casts = [
@@ -25,6 +25,7 @@ class Product extends Model
         'is_vegetarian'  => 'boolean',
         'has_alcohol'    => 'boolean',
         'has_pork'       => 'boolean',
+        'is_featured'    => 'boolean',
     ];
 
     public function category()

@@ -10,6 +10,7 @@
     invalidQr: '이 QR 코드는 유효하지 않거나 만료되었습니다.',
     notFound: '페이지를 찾을 수 없습니다',
     backToMenu: '메뉴로 돌아가기',
+    featured: '추천 & 캠페인',
   },
   review: {
     rate_us: '레스토랑을 평가해 주세요',

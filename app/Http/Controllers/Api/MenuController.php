@@ -69,6 +69,18 @@ class MenuController extends Controller
                 ->toArray();
         }
 
+        // Önerilen ürünler (is_featured = true)
+        $featuredProducts = \App\Models\Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('active', true)
+            ->where('is_featured', true)
+            ->with(['translations', 'units'])
+            ->orderBy('name')
+            ->get()
+            ->map(fn($p) => $this->formatProduct($p, $requestedLang, $overridesMap, $department))
+            ->filter(fn($p) => ! $p['hidden'])
+            ->values();
+
         // Load root categories with their children and products
         $rootCategories = Category::withoutGlobalScopes()
             ->where('tenant_id', $tenant->id)
@@ -111,9 +123,10 @@ class MenuController extends Controller
                 'logo'         => $department->logo,
                 'banner_image' => $department->banner_image,
             ] : null,
-            'active_languages' => $activeLangs,
-            'lang'             => $requestedLang,
-            'categories'       => $categories,
+            'active_languages'  => $activeLangs,
+            'lang'              => $requestedLang,
+            'categories'        => $categories,
+            'featured_products' => $featuredProducts,
         ]);
     }
 

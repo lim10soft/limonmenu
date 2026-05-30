@@ -10,6 +10,7 @@
     invalidQr: 'Bu QR kod geçersiz veya süresi dolmuş.',
     notFound: 'Sayfa Bulunamadı',
     backToMenu: 'Menüye Geri Dön',
+    featured: 'Önerilen & Kampanya',
   },
   review: {
     rate_us: 'Restoranımızı değerlendirin',
