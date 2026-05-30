@@ -88,20 +88,32 @@
             v-if="item.type === 'featured'"
             @click="openFeatured"
             :style="{
-              position: 'relative', overflow: 'hidden', borderRadius: '10px',
+              position: 'relative', overflow: 'hidden', borderRadius: '12px',
               height: '150px', cursor: 'pointer',
               gridColumn: i % 3 === 0 ? '1 / -1' : undefined,
-              background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)'
+              background: 'linear-gradient(145deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%)'
             }"
           >
-            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.15);"></div>
-            <!-- dekoratif çember -->
-            <div style="position:absolute;top:-20px;right:-20px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,0.12);"></div>
-            <div style="position:absolute;bottom:-30px;left:-15px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.08);"></div>
-            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;">
-              <span style="font-size:28px;line-height:1;">⭐</span>
-              <span style="color:#fff;font-weight:800;text-transform:uppercase;text-align:center;font-size:13px;letter-spacing:0.1em;text-shadow:0 1px 6px rgba(0,0,0,0.6);line-height:1.3;">{{ t('menu.featured') }}</span>
-              <span style="color:rgba(255,255,255,0.85);font-size:10px;font-weight:500;background:rgba(0,0,0,0.2);border-radius:20px;padding:2px 10px;">{{ store.featuredProducts.length }} ürün</span>
+            <!-- Sıcak parlama — alt sağ -->
+            <div style="position:absolute;bottom:-20px;right:-20px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle, rgba(251,146,60,0.45) 0%, transparent 70%);pointer-events:none;"></div>
+            <!-- Subtle üst şerit -->
+            <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f59e0b,#fb923c,#f59e0b);border-radius:12px 12px 0 0;"></div>
+
+            <!-- Sağ üst: tag ikonu -->
+            <div style="position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:8px;background:rgba(251,146,60,0.2);display:flex;align-items:center;justify-content:center;border:1px solid rgba(251,146,60,0.35);">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#fb923c" style="width:15px;height:15px;">
+                <path fill-rule="evenodd" d="M5.25 2.25a3 3 0 0 0-3 3v4.318a3 3 0 0 0 .879 2.121l9.58 9.581c.92.92 2.39 1.033 3.442.268a18.944 18.944 0 0 0 5.512-5.512c.764-1.052.652-2.522-.268-3.441l-9.58-9.581a3 3 0 0 0-2.121-.879H5.25Zm1.5 3.75a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+
+            <!-- Merkez içerik -->
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:16px 14px 12px;">
+              <!-- Sparkles SVG ikonu -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width:38px;height:38px;filter:drop-shadow(0 2px 12px rgba(251,146,60,0.7));flex-shrink:0;">
+                <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/>
+              </svg>
+              <span style="color:#fff;font-weight:800;text-transform:uppercase;text-align:center;font-size:12px;letter-spacing:0.12em;text-shadow:0 1px 8px rgba(0,0,0,0.8);line-height:1.3;">{{ t('menu.featured') }}</span>
+              <span style="color:#fcd34d;font-size:9.5px;font-weight:600;background:rgba(255,255,255,0.1);border-radius:20px;padding:2px 9px;letter-spacing:0.05em;border:1px solid rgba(251,191,36,0.3);">{{ store.featuredProducts.length }} ürün</span>
             </div>
           </div>
 
@@ -146,10 +158,10 @@
         <div ref="featuredScrollEl" class="absolute inset-0 overflow-y-auto" style="padding-bottom:110px;">
 
           <!-- Hero -->
-          <div class="relative w-full" style="height:220px; background:linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);">
-            <div style="position:absolute;top:-40px;right:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.1);"></div>
-            <div style="position:absolute;bottom:-50px;left:-20px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.07);"></div>
-            <div class="absolute inset-0" style="background:linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.0) 50%, rgba(0,0,0,0.5) 100%);"></div>
+          <div class="relative w-full" style="height:220px; background:linear-gradient(145deg, #0f172a 0%, #1e1b4b 55%, #312e81 100%);">
+            <div style="position:absolute;bottom:-30px;right:-30px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(251,146,60,0.35) 0%, transparent 70%);pointer-events:none;"></div>
+            <div style="position:absolute;top:-60px;left:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 70%);pointer-events:none;"></div>
+            <div class="absolute inset-0" style="background:linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.0) 40%, rgba(0,0,0,0.55) 100%);"></div>
 
             <button @click="closeFeatured" class="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full text-white font-semibold px-3 py-1.5" style="background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);font-size:12px;">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,7 +171,12 @@
             </button>
 
             <div class="absolute bottom-0 left-0 right-0 pb-3 flex justify-center">
-              <span class="text-white font-bold uppercase px-5 py-1.5 rounded-full" style="background:rgba(0,0,0,0.35);backdrop-filter:blur(4px);font-size:13px;letter-spacing:0.12em;">⭐ {{ t('menu.featured') }}</span>
+              <span class="text-white font-bold uppercase px-5 py-1.5 rounded-full flex items-center gap-2" style="background:rgba(0,0,0,0.35);backdrop-filter:blur(4px);font-size:13px;letter-spacing:0.12em;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" style="width:14px;height:14px;flex-shrink:0;">
+                  <path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/>
+                </svg>
+                {{ t('menu.featured') }}
+              </span>
             </div>
           </div>
 
