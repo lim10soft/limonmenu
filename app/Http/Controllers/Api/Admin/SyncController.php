@@ -99,12 +99,13 @@ class SyncController extends Controller
                 );
             }
 
-            // 2. departman → wholesale_price
-            $wholesalePrice = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : null;
-            if ($wholesalePrice !== null && $wholesalePrice > 0 && $depts->count() >= 2) {
+            // 2. departman → wholesale_price, 0 ise sale_price kullan
+            $wholesalePrice  = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : 0;
+            $dept2Price      = $wholesalePrice > 0 ? $wholesalePrice : $salePrice;
+            if ($dept2Price !== null && $dept2Price > 0 && $depts->count() >= 2) {
                 DepartmentProductOverride::updateOrCreate(
                     ['department_id' => $depts[1]->id, 'product_id' => $product->id],
-                    ['price' => $wholesalePrice, 'hidden' => false]
+                    ['price' => $dept2Price, 'hidden' => false]
                 );
             }
 
