@@ -83,20 +83,29 @@ class SyncController extends Controller
                 }
             }
 
-            // 2. departman fiyatı — wholesale_price varsa
-            $wholesalePrice = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : null;
-            if ($wholesalePrice !== null && $wholesalePrice > 0) {
-                $secondDept = Department::withoutGlobalScopes()
-                    ->where('tenant_id', $tenant->id)
-                    ->orderBy('sort_order')
-                    ->skip(1)->take(1)->first();
+            // Departman fiyatları — tenant'ın departmanları sırayla
+            $depts = Department::withoutGlobalScopes()
+                ->where('tenant_id', $tenant->id)
+                ->orderBy('sort_order')
+                ->take(2)
+                ->get();
 
-                if ($secondDept) {
-                    DepartmentProductOverride::updateOrCreate(
-                        ['department_id' => $secondDept->id, 'product_id' => $product->id],
-                        ['price' => $wholesalePrice, 'hidden' => false]
-                    );
-                }
+            // 1. departman → sale_price
+            $salePrice = isset($p['sale_price']) ? (float) $p['sale_price'] : null;
+            if ($salePrice !== null && $salePrice > 0 && $depts->count() >= 1) {
+                DepartmentProductOverride::updateOrCreate(
+                    ['department_id' => $depts[0]->id, 'product_id' => $product->id],
+                    ['price' => $salePrice, 'hidden' => false]
+                );
+            }
+
+            // 2. departman → wholesale_price
+            $wholesalePrice = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : null;
+            if ($wholesalePrice !== null && $wholesalePrice > 0 && $depts->count() >= 2) {
+                DepartmentProductOverride::updateOrCreate(
+                    ['department_id' => $depts[1]->id, 'product_id' => $product->id],
+                    ['price' => $wholesalePrice, 'hidden' => false]
+                );
             }
 
             $synced++;
