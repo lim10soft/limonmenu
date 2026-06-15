@@ -91,10 +91,10 @@ class MenuController extends Controller
                 'translations',
                 'children' => fn($q) => $q->where('active', true)->orderBy('sort_order'),
                 'children.translations',
-                'children.products' => fn($q) => $q->where('active', true)->orderBy('sort_order')->orderBy('name'),
+                'children.products' => fn($q) => $q->where('active', true)->reorder()->orderBy('sort_order')->orderBy('name'),
                 'children.products.translations',
                 'children.products.units',
-                'products' => fn($q) => $q->where('active', true)->orderBy('sort_order')->orderBy('name'),
+                'products' => fn($q) => $q->where('active', true)->reorder()->orderBy('sort_order')->orderBy('name'),
                 'products.translations',
                 'products.units',
             ])

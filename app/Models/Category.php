@@ -15,7 +15,7 @@ class Category extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class)->where('active', true)->orderBy('name');
+        return $this->hasMany(Product::class)->where('active', true)->orderBy('sort_order')->orderBy('name');
     }
 
     public function translations()
