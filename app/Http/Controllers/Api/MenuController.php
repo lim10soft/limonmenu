@@ -75,6 +75,7 @@ class MenuController extends Controller
             ->where('active', true)
             ->where('is_featured', true)
             ->with(['translations', 'units'])
+            ->orderBy('sort_order')
             ->orderBy('name')
             ->get()
             ->map(fn($p) => $this->formatProduct($p, $requestedLang, $overridesMap, $department))
@@ -90,10 +91,10 @@ class MenuController extends Controller
                 'translations',
                 'children' => fn($q) => $q->where('active', true)->orderBy('sort_order'),
                 'children.translations',
-                'children.products' => fn($q) => $q->where('active', true)->orderBy('name'),
+                'children.products' => fn($q) => $q->where('active', true)->orderBy('sort_order')->orderBy('name'),
                 'children.products.translations',
                 'children.products.units',
-                'products' => fn($q) => $q->where('active', true)->orderBy('name'),
+                'products' => fn($q) => $q->where('active', true)->orderBy('sort_order')->orderBy('name'),
                 'products.translations',
                 'products.units',
             ])

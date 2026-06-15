@@ -60,6 +60,7 @@ class WebhookController extends Controller
                 'image'       => $p['image'] ?? null,
                 'active'      => isset($p['visible']) ? (bool) $p['visible'] : true,
                 'in_stock'    => ($p['status'] ?? 'available') === 'available' ? 1 : 0,
+                'sort_order'  => isset($p['sort_order']) ? (int) $p['sort_order'] : 0,
             ]
         );
 

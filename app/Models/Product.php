@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $fillable = [
         'tenant_id', 'category_id', 'name', 'description',
-        'price', 'image', 'active', 'nexopos_id',
+        'price', 'image', 'active', 'nexopos_id', 'sort_order',
         'in_stock', 'calories', 'ingredients', 'allergens',
         'is_vegan', 'is_vegetarian', 'has_alcohol', 'has_pork', 'is_featured',
     ];

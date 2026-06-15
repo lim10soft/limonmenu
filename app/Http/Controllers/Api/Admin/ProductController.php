@@ -18,6 +18,7 @@ class ProductController extends Controller
         $query = Product::withoutGlobalScopes()
             ->where('tenant_id', $tenant->id)
             ->with(['category', 'translations', 'units', 'departmentOverrides'])
+            ->orderBy('sort_order')
             ->orderBy('name');
 
         if ($search = trim($request->get('search', ''))) {
@@ -55,6 +56,7 @@ class ProductController extends Controller
             'has_alcohol'  => 'boolean',
             'has_pork'     => 'boolean',
             'is_featured'  => 'boolean',
+            'sort_order'   => 'integer|min:0',
             'translations' => 'array',
             'translations.*.lang_code'   => 'required|string|max:10',
             'translations.*.name'        => 'nullable|string|max:150',
@@ -85,6 +87,7 @@ class ProductController extends Controller
             'has_alcohol'  => $data['has_alcohol'] ?? false,
             'has_pork'     => $data['has_pork'] ?? false,
             'is_featured'  => $data['is_featured'] ?? false,
+            'sort_order'   => $data['sort_order'] ?? 0,
         ]);
 
         $this->saveTranslations($product->id, $data['translations'] ?? []);
@@ -117,6 +120,7 @@ class ProductController extends Controller
             'has_alcohol'  => 'boolean',
             'has_pork'     => 'boolean',
             'is_featured'  => 'boolean',
+            'sort_order'   => 'integer|min:0',
             'translations' => 'array',
             'translations.*.lang_code'   => 'required|string|max:10',
             'translations.*.name'        => 'nullable|string|max:150',
@@ -131,7 +135,7 @@ class ProductController extends Controller
         ]);
 
         $fields = ['name','category_id','description','price','image','active','in_stock',
-                   'calories','ingredients','allergens','is_vegan','is_vegetarian','has_alcohol','has_pork','is_featured'];
+                   'calories','ingredients','allergens','is_vegan','is_vegetarian','has_alcohol','has_pork','is_featured','sort_order'];
         $update = array_intersect_key($data, array_flip($fields));
         $product->update($update);
 
@@ -224,6 +228,7 @@ class ProductController extends Controller
             'image'         => $p->image,
             'active'        => $p->active,
             'in_stock'      => $p->in_stock,
+            'sort_order'    => $p->sort_order ?? 0,
             'calories'      => $p->calories,
             'ingredients'   => $p->ingredients,
             'allergens'     => $p->allergens ?? [],

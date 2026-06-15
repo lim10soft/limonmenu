@@ -78,7 +78,16 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-2">
                   <span class="font-semibold text-gray-800 leading-tight">{{ p.name }}</span>
-                  <span class="font-bold text-orange-600 shrink-0 text-sm">{{ formatPrice(p.price) }}</span>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <input
+                      type="number" min="0"
+                      :value="p.sort_order ?? 0"
+                      @change="updateSortOrder(p, Number(($event.target as HTMLInputElement).value))"
+                      class="w-14 text-xs text-center border border-gray-200 rounded-lg px-1 py-1 focus:outline-none focus:ring-1 focus:ring-orange-300"
+                      title="Sıra numarası"
+                    />
+                    <span class="font-bold text-orange-600 text-sm">{{ formatPrice(p.price) }}</span>
+                  </div>
                 </div>
                 <p v-if="p.category?.name" class="text-xs text-gray-400 mt-0.5">{{ p.category.name }}</p>
                 <!-- Alt satır: toggle'lar + butonlar -->
@@ -118,6 +127,7 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-gray-100">
+                <th class="text-center px-3 py-3 text-gray-500 font-medium w-16">Sıra</th>
                 <th class="text-left px-4 py-3 text-gray-500 font-medium">{{ t('common.name') }}</th>
                 <th class="text-left px-4 py-3 text-gray-500 font-medium">{{ t('common.category') }}</th>
                 <th class="text-right px-4 py-3 text-gray-500 font-medium">{{ t('common.price') }}</th>
@@ -127,6 +137,15 @@
             </thead>
             <tbody>
               <tr v-for="p in products" :key="p.id" class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+                <td class="px-3 py-3 text-center">
+                  <input
+                    type="number" min="0"
+                    :value="p.sort_order ?? 0"
+                    @change="updateSortOrder(p, Number(($event.target as HTMLInputElement).value))"
+                    class="w-14 text-xs text-center border border-gray-200 rounded-lg px-1 py-1.5 focus:outline-none focus:ring-1 focus:ring-orange-300"
+                    title="Sıra numarası"
+                  />
+                </td>
                 <td class="px-4 py-3">
                   <div class="flex items-center gap-3">
                     <img v-if="p.image" :src="p.image" class="w-10 h-10 rounded-lg object-cover shrink-0" />
@@ -609,6 +628,12 @@ async function autoTranslate() {
   } finally {
     translating.value = false
   }
+}
+
+async function updateSortOrder(p: Product, value: number) {
+  const v = Math.max(0, Math.floor(value) || 0)
+  await http.patch(`/admin/products/${p.id}`, { sort_order: v })
+  p.sort_order = v
 }
 
 async function toggleActive(p: Product) {

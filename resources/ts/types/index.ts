@@ -110,6 +110,7 @@ export interface Product {
   has_pork: boolean
   is_featured?: boolean
   hidden?: boolean
+  sort_order?: number
   category?: Category
   translations?: Record<string, ProductTranslation>
   units?: ProductUnit[]
