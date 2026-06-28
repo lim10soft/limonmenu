@@ -69,20 +69,39 @@
       </div>
     </template>
 
-    <!-- Uyumluluk Etiketleri -->
-    <div v-if="hasCompliance" style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:4px; margin-top:8px; width:100%;">
-      <span v-if="product.calories" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#f3ede8; color:#7a6e67;">{{ product.calories }} kcal</span>
-      <span v-if="product.is_vegan" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#dcfce7; color:#166534;">🌱 Vegan</span>
-      <span v-else-if="product.is_vegetarian" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#dcfce7; color:#166534;">🥦 Vejetaryen</span>
-      <span v-if="product.has_alcohol" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#fee2e2; color:#991b1b;">🍺 Alkol</span>
-      <span v-if="product.has_pork" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#fee2e2; color:#991b1b;">🐷 Domuz</span>
-      <template v-if="product.allergens && product.allergens.length">
+    <!-- Uyumluluk Bölümü -->
+    <div v-if="hasCompliance" style="width:100%; margin-top:8px;">
+
+      <!-- Satır 1: Kalori + Diyet Etiketleri -->
+      <div v-if="hasDietary" style="display:flex; flex-wrap:wrap; justify-content:center; gap:4px; margin-bottom:5px;">
+        <span v-if="product.calories" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#f0ece8; color:#7a6e67; letter-spacing:0.01em;">
+          🔥 {{ product.calories }} kcal
+        </span>
+        <span v-if="product.is_vegan" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#dcfce7; color:#15803d;">
+          🌱 Vegan
+        </span>
+        <span v-else-if="product.is_vegetarian" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#dcfce7; color:#15803d;">
+          🥦 Vejetaryen
+        </span>
+        <span v-if="product.has_alcohol" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#fee2e2; color:#b91c1c;">
+          🍺 Alkol
+        </span>
+        <span v-if="product.has_pork" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#fee2e2; color:#b91c1c;">
+          🐷 Domuz
+        </span>
+      </div>
+
+      <!-- Satır 2: Alerjenler -->
+      <div v-if="product.allergens && product.allergens.length"
+           style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:5px 8px; display:flex; flex-wrap:wrap; align-items:center; gap:3px; justify-content:center;">
+        <span style="font-size:9px; font-weight:700; color:#b45309; text-transform:uppercase; letter-spacing:0.04em; width:100%; text-align:center; margin-bottom:3px;">⚠ Alerjen İçerir</span>
         <span
           v-for="a in product.allergens"
           :key="a"
-          style="font-size:11px; padding:2px 6px; border-radius:99px; background:#fef3c7; color:#92400e;"
-        >{{ ALLERGEN_ICONS[a] || '⚠️' }} {{ ALLERGEN_LABELS[a] || a }}</span>
-      </template>
+          style="font-size:10px; font-weight:600; padding:2px 7px; border-radius:4px; background:#fef3c7; color:#92400e; border:1px solid #fde68a;"
+        >{{ ALLERGEN_LABELS[a] || a }}</span>
+      </div>
+
     </div>
   </div>
 
@@ -133,26 +152,23 @@ const emit = defineEmits<{
 
 const lightbox = ref(false)
 
-const ALLERGEN_ICONS: Record<string, string> = {
-  gluten: '🌾', shellfish: '🦐', egg: '🥚', fish: '🐟',
-  peanut: '🥜', soy: '🫘', milk: '🥛', nuts: '🌰',
-  celery: '🥬', mustard: '🌶️', sesame: '🟡', sulphites: '🍷',
-  lupin: '🫛', molluscs: '🐚',
-}
 const ALLERGEN_LABELS: Record<string, string> = {
   gluten: 'Gluten', shellfish: 'Kabuklu Deniz', egg: 'Yumurta', fish: 'Balık',
-  peanut: 'Yer Fıstığı', soy: 'Soya', milk: 'Süt/Laktoz', nuts: 'Kabuklu Yemiş',
+  peanut: 'Yer Fıstığı', soy: 'Soya', milk: 'Süt', nuts: 'Kabuklu Yemiş',
   celery: 'Kereviz', mustard: 'Hardal', sesame: 'Susam', sulphites: 'Sülfitler',
   lupin: 'Acı Bakla', molluscs: 'Yumuşakça',
 }
 
-const hasCompliance = computed(() =>
+const hasDietary = computed(() =>
   props.product.calories ||
   props.product.is_vegan ||
   props.product.is_vegetarian ||
   props.product.has_alcohol ||
-  props.product.has_pork ||
-  (props.product.allergens && props.product.allergens.length > 0)
+  props.product.has_pork
+)
+
+const hasCompliance = computed(() =>
+  hasDietary.value || (props.product.allergens && props.product.allergens.length > 0)
 )
 
 function formatPrice(amount: number) {
