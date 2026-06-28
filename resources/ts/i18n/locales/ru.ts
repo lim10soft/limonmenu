@@ -37,6 +37,13 @@
     number: 'Номер заказа',
     backToMenu: 'Вернуться в меню',
   },
+  dietary: {
+    vegan:        'Веган',
+    vegetarian:   'Вегетарианский',
+    alcohol:      'Алкоголь',
+    pork:         'Свинина',
+    out_of_stock: 'Временно нет в наличии',
+  },
   allergens: {
     contains:  '⚠ Содержит аллергены',
     gluten:    'Глютен',

@@ -37,6 +37,13 @@
     number: '注文番号',
     backToMenu: 'メニューに戻る',
   },
+  dietary: {
+    vegan:        'ヴィーガン',
+    vegetarian:   'ベジタリアン',
+    alcohol:      'アルコール',
+    pork:         '豚肉',
+    out_of_stock: '現在品切れ中',
+  },
   allergens: {
     contains:  '⚠ アレルゲンを含む',
     gluten:    'グルテン',

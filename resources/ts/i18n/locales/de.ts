@@ -37,6 +37,13 @@
     number: 'Bestellnummer',
     backToMenu: 'Zurück zur Speisekarte',
   },
+  dietary: {
+    vegan:        'Vegan',
+    vegetarian:   'Vegetarisch',
+    alcohol:      'Alkohol',
+    pork:         'Schwein',
+    out_of_stock: 'Derzeit nicht verfügbar',
+  },
   allergens: {
     contains:  '⚠ Enthält Allergene',
     gluten:    'Gluten',

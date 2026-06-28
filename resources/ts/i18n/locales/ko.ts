@@ -37,6 +37,13 @@
     number: '주문 번호',
     backToMenu: '메뉴로 돌아가기',
   },
+  dietary: {
+    vegan:        '비건',
+    vegetarian:   '채식',
+    alcohol:      '알코올',
+    pork:         '돼지고기',
+    out_of_stock: '현재 품절',
+  },
   allergens: {
     contains:  '⚠ 알레르기 유발 성분 포함',
     gluten:    '글루텐',

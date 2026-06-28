@@ -37,6 +37,13 @@
     number: '订单号',
     backToMenu: '返回菜单',
   },
+  dietary: {
+    vegan:        '纯素',
+    vegetarian:   '素食',
+    alcohol:      '含酒精',
+    pork:         '含猪肉',
+    out_of_stock: '暂时缺货',
+  },
   allergens: {
     contains:  '⚠ 含过敏原',
     gluten:    '麸质',

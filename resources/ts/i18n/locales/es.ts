@@ -37,6 +37,13 @@
     number: 'Nº de Pedido',
     backToMenu: 'Volver al Menú',
   },
+  dietary: {
+    vegan:        'Vegano',
+    vegetarian:   'Vegetariano',
+    alcohol:      'Alcohol',
+    pork:         'Cerdo',
+    out_of_stock: 'Agotado actualmente',
+  },
   allergens: {
     contains:  '⚠ Contiene alérgenos',
     gluten:    'Gluten',

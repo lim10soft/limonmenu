@@ -37,6 +37,13 @@
     number: 'Order No',
     backToMenu: 'Back to Menu',
   },
+  dietary: {
+    vegan:        'Vegan',
+    vegetarian:   'Vegetarian',
+    alcohol:      'Alcohol',
+    pork:         'Pork',
+    out_of_stock: 'Currently out of stock',
+  },
   allergens: {
     contains:  '⚠ Contains Allergens',
     gluten:    'Gluten',

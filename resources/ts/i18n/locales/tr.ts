@@ -37,6 +37,13 @@
     number: 'Sipariş No',
     backToMenu: 'Menüye Dön',
   },
+  dietary: {
+    vegan:        'Vegan',
+    vegetarian:   'Vejetaryen',
+    alcohol:      'Alkol',
+    pork:         'Domuz',
+    out_of_stock: 'Bu ürün şuan için tükendi',
+  },
   allergens: {
     contains:  '⚠ Alerjen İçerir',
     gluten:    'Gluten',

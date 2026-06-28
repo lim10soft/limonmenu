@@ -37,6 +37,13 @@
     number: 'رقم الطلب',
     backToMenu: 'العودة إلى القائمة',
   },
+  dietary: {
+    vegan:        'نباتي',
+    vegetarian:   'نباتي بيضي',
+    alcohol:      'كحول',
+    pork:         'لحم خنزير',
+    out_of_stock: 'غير متوفر حالياً',
+  },
   allergens: {
     contains:  '⚠ يحتوي على مسببات الحساسية',
     gluten:    'جلوتين',

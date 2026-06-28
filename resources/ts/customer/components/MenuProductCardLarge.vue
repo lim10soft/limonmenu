@@ -32,7 +32,7 @@
 
     <!-- Tükendi -->
     <template v-if="product.in_stock === false">
-      <span style="font-size:12px; font-weight:600; color:#dc2626; background:#fee2e2; padding:3px 10px; border-radius:99px; margin-top:4px;">Bu ürün şuan için tükendi</span>
+      <span style="font-size:12px; font-weight:600; color:#dc2626; background:#fee2e2; padding:3px 10px; border-radius:99px; margin-top:4px;">{{ t('dietary.out_of_stock') }}</span>
     </template>
 
     <!-- Stokta: Birimler -->
@@ -78,16 +78,16 @@
           🔥 {{ product.calories }} kcal
         </span>
         <span v-if="product.is_vegan" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#dcfce7; color:#15803d;">
-          🌱 Vegan
+          🌱 {{ t('dietary.vegan') }}
         </span>
         <span v-else-if="product.is_vegetarian" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#dcfce7; color:#15803d;">
-          🥦 Vejetaryen
+          🥦 {{ t('dietary.vegetarian') }}
         </span>
         <span v-if="product.has_alcohol" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#fee2e2; color:#b91c1c;">
-          🍺 Alkol
+          🍺 {{ t('dietary.alcohol') }}
         </span>
         <span v-if="product.has_pork" style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; background:#fee2e2; color:#b91c1c;">
-          🐷 Domuz
+          🐷 {{ t('dietary.pork') }}
         </span>
       </div>
 

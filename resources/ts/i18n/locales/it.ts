@@ -37,6 +37,13 @@
     number: 'N° ordine',
     backToMenu: 'Torna al menu',
   },
+  dietary: {
+    vegan:        'Vegano',
+    vegetarian:   'Vegetariano',
+    alcohol:      'Alcool',
+    pork:         'Maiale',
+    out_of_stock: 'Attualmente esaurito',
+  },
   allergens: {
     contains:  '⚠ Contiene allergeni',
     gluten:    'Glutine',
