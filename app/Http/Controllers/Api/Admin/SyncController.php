@@ -69,8 +69,6 @@ class SyncController extends Controller
                     'in_stock'    => ($p['status'] ?? 'available') === 'available' ? 1 : 0,
                     'is_featured' => (bool) ($p['is_featured'] ?? false),
                     'sort_order'  => isset($p['sort_order']) ? (int) $p['sort_order'] : 0,
-                    'allergens'   => isset($p['allergens']) && is_array($p['allergens']) ? $p['allergens'] : null,
-                    'calories'    => isset($p['calories']) && $p['calories'] !== null ? (int) $p['calories'] : null,
                 ]
             );
 
