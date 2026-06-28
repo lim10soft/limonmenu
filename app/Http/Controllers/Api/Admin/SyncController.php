@@ -117,6 +117,43 @@ class SyncController extends Controller
         return response()->json(['synced' => $synced]);
     }
 
+    public function getCompliance(Request $request, int $nexoposId)
+    {
+        $tenant  = $request->user()->tenant;
+        $product = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('nexopos_id', $nexoposId)
+            ->first();
+
+        return response()->json([
+            'allergens' => $product?->allergens ?? [],
+            'calories'  => $product?->calories,
+        ]);
+    }
+
+    public function updateCompliance(Request $request, int $nexoposId)
+    {
+        $tenant  = $request->user()->tenant;
+        $product = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->where('nexopos_id', $nexoposId)
+            ->first();
+
+        if (! $product) {
+            return response()->json(['success' => false, 'message' => 'Ürün bulunamadı'], 404);
+        }
+
+        $allergens = $request->input('allergens', []);
+        $calories  = $request->input('calories');
+
+        $product->update([
+            'allergens' => is_array($allergens) ? $allergens : [],
+            'calories'  => $calories !== null && $calories !== '' ? (int) $calories : null,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Alerjen ve kalori bilgisi güncellendi']);
+    }
+
     public function deleteByNexoposId(Request $request, int $nexoposId)
     {
         $tenant  = $request->user()->tenant;
