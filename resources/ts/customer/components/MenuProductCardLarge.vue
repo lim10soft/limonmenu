@@ -94,12 +94,12 @@
       <!-- Satır 2: Alerjenler -->
       <div v-if="product.allergens && product.allergens.length"
            style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:5px 8px; display:flex; flex-wrap:wrap; align-items:center; gap:3px; justify-content:center;">
-        <span style="font-size:9px; font-weight:700; color:#b45309; text-transform:uppercase; letter-spacing:0.04em; width:100%; text-align:center; margin-bottom:3px;">⚠ Alerjen İçerir</span>
+        <span style="font-size:9px; font-weight:700; color:#b45309; text-transform:uppercase; letter-spacing:0.04em; width:100%; text-align:center; margin-bottom:3px;">{{ t('allergens.contains') }}</span>
         <span
           v-for="a in product.allergens"
           :key="a"
           style="font-size:10px; font-weight:600; padding:2px 7px; border-radius:4px; background:#fef3c7; color:#92400e; border:1px solid #fde68a;"
-        >{{ ALLERGEN_ICONS[a] || '⚠' }} {{ ALLERGEN_LABELS[a] || a }}</span>
+        >{{ ALLERGEN_ICONS[a] || '⚠' }} {{ t('allergens.' + a, a) }}</span>
       </div>
 
     </div>
@@ -133,10 +133,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { Product } from '@/types'
 import { useMenuStore } from '@/customer/stores/menuStore'
 import { formatPrice as _formatPrice } from '@/utils/currency'
 const store = useMenuStore()
+const { t } = useI18n()
 
 interface AddEvent { product: Product; unitLabel?: string; unitPrice?: number }
 
@@ -170,23 +172,6 @@ const ALLERGEN_ICONS: Record<string, string> = {
   molluscs:  '🐚',
 }
 
-const ALLERGEN_LABELS: Record<string, string> = {
-  gluten:    'Gluten',
-  shellfish: 'Kabuklu Deniz',
-  egg:       'Yumurta',
-  fish:      'Balık',
-  seafood:   'Balık/Deniz',
-  peanut:    'Yer Fıstığı',
-  soy:       'Soya',
-  milk:      'Süt',
-  nuts:      'Kabuklu Yemiş',
-  celery:    'Kereviz',
-  mustard:   'Hardal',
-  sesame:    'Susam',
-  sulphites: 'Sülfitler',
-  lupin:     'Acı Bakla',
-  molluscs:  'Yumuşakça',
-}
 
 const hasDietary = computed(() =>
   props.product.calories ||
