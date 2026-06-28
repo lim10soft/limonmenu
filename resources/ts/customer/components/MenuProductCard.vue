@@ -93,7 +93,7 @@
             v-for="a in product.allergens"
             :key="a"
             style="font-size:10px; font-weight:600; padding:1px 6px; border-radius:4px; background:#fef3c7; color:#92400e; border:1px solid #fde68a;"
-          >{{ ALLERGEN_LABELS[a] || a }}</span>
+          >{{ ALLERGEN_ICONS[a] || '⚠' }} {{ ALLERGEN_LABELS[a] || a }}</span>
         </div>
 
       </div>
@@ -120,11 +120,40 @@ const emit = defineEmits<{
   (e: 'add', payload: AddEvent): void
 }>()
 
+const ALLERGEN_ICONS: Record<string, string> = {
+  gluten:    '🌾',
+  shellfish: '🦐',
+  egg:       '🥚',
+  fish:      '🐟',
+  seafood:   '🐟',  // eski veri alias'ı
+  peanut:    '🥜',
+  soy:       '🟤',  // 🫘 Unicode 14 desteksiz cihazlarda çıkmıyor
+  milk:      '🥛',
+  nuts:      '🌰',
+  celery:    '🥬',
+  mustard:   '🌶️',
+  sesame:    '🟡',
+  sulphites: '🍷',
+  lupin:     '🍀',  // 🫛 Unicode 15 — yerine 🍀
+  molluscs:  '🐚',
+}
+
 const ALLERGEN_LABELS: Record<string, string> = {
-  gluten: 'Gluten', shellfish: 'Kabuklu Deniz', egg: 'Yumurta', fish: 'Balık',
-  peanut: 'Yer Fıstığı', soy: 'Soya', milk: 'Süt', nuts: 'Kabuklu Yemiş',
-  celery: 'Kereviz', mustard: 'Hardal', sesame: 'Susam', sulphites: 'Sülfitler',
-  lupin: 'Acı Bakla', molluscs: 'Yumuşakça',
+  gluten:    'Gluten',
+  shellfish: 'Kabuklu Deniz',
+  egg:       'Yumurta',
+  fish:      'Balık',
+  seafood:   'Balık/Deniz',  // eski veri alias'ı
+  peanut:    'Yer Fıstığı',
+  soy:       'Soya',
+  milk:      'Süt',
+  nuts:      'Kabuklu Yemiş',
+  celery:    'Kereviz',
+  mustard:   'Hardal',
+  sesame:    'Susam',
+  sulphites: 'Sülfitler',
+  lupin:     'Acı Bakla',
+  molluscs:  'Yumuşakça',
 }
 
 const hasDietary = computed(() =>
