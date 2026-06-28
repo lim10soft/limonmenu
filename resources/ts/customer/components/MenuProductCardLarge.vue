@@ -76,7 +76,13 @@
       <span v-else-if="product.is_vegetarian" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#dcfce7; color:#166534;">🥦 Vejetaryen</span>
       <span v-if="product.has_alcohol" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#fee2e2; color:#991b1b;">🍺 Alkol</span>
       <span v-if="product.has_pork" style="font-size:11px; padding:2px 6px; border-radius:99px; background:#fee2e2; color:#991b1b;">🐷 Domuz</span>
-      <span v-if="product.allergens && product.allergens.length" style="font-size:11px; color:#9ca3af;" :title="allergenLabels">⚠️ {{ product.allergens.map(a => ALLERGEN_ICONS[a] || a).join(' ') }}</span>
+      <template v-if="product.allergens && product.allergens.length">
+        <span
+          v-for="a in product.allergens"
+          :key="a"
+          style="font-size:11px; padding:2px 6px; border-radius:99px; background:#fef3c7; color:#92400e;"
+        >{{ ALLERGEN_ICONS[a] || '⚠️' }} {{ ALLERGEN_LABELS[a] || a }}</span>
+      </template>
     </div>
   </div>
 
@@ -128,12 +134,16 @@ const emit = defineEmits<{
 const lightbox = ref(false)
 
 const ALLERGEN_ICONS: Record<string, string> = {
-  gluten: '🌾', milk: '🥛', egg: '🥚', peanut: '🥜',
-  nuts: '🌰', soy: '🫘', sesame: '🌿', seafood: '🐟',
+  gluten: '🌾', shellfish: '🦐', egg: '🥚', fish: '🐟',
+  peanut: '🥜', soy: '🫘', milk: '🥛', nuts: '🌰',
+  celery: '🥬', mustard: '🌶️', sesame: '🟡', sulphites: '🍷',
+  lupin: '🫛', molluscs: '🐚',
 }
 const ALLERGEN_LABELS: Record<string, string> = {
-  gluten: 'Gluten', milk: 'Süt/Laktoz', egg: 'Yumurta', peanut: 'Yer Fıstığı',
-  nuts: 'Kabuklu Yemiş', soy: 'Soya', sesame: 'Susam', seafood: 'Balık/Deniz Ürünleri',
+  gluten: 'Gluten', shellfish: 'Kabuklu Deniz', egg: 'Yumurta', fish: 'Balık',
+  peanut: 'Yer Fıstığı', soy: 'Soya', milk: 'Süt/Laktoz', nuts: 'Kabuklu Yemiş',
+  celery: 'Kereviz', mustard: 'Hardal', sesame: 'Susam', sulphites: 'Sülfitler',
+  lupin: 'Acı Bakla', molluscs: 'Yumuşakça',
 }
 
 const hasCompliance = computed(() =>
@@ -143,10 +153,6 @@ const hasCompliance = computed(() =>
   props.product.has_alcohol ||
   props.product.has_pork ||
   (props.product.allergens && props.product.allergens.length > 0)
-)
-
-const allergenLabels = computed(() =>
-  (props.product.allergens ?? []).map(a => ALLERGEN_LABELS[a] || a).join(', ')
 )
 
 function formatPrice(amount: number) {

@@ -272,7 +272,7 @@
     ]
   },
   "resources/ts/customer/main.ts": {
-    "file": "assets/main-CfHlB6bF.js",
+    "file": "assets/main-D7xkS40E.js",
     "name": "main",
     "src": "resources/ts/customer/main.ts",
     "isEntry": true,
@@ -281,7 +281,7 @@
       "_currency-kqPrYZFj.js"
     ],
     "css": [
-      "assets/main-CVb_nBRS.css",
+      "assets/main-D0gj09Bl.css",
       "assets/app-d2O_YuDk.css"
     ]
   }
