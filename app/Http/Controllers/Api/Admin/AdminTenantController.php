@@ -94,6 +94,7 @@ class AdminTenantController extends Controller
 
         $request->validate([
             'slug'          => 'required|string|max:100',
+            'name'          => 'nullable|string|max:150',
             'logo'          => 'nullable|string|max:500',
             'banner_image'  => 'nullable|string|max:500',
             'instagram_url' => 'nullable|string|max:500',
@@ -105,6 +106,7 @@ class AdminTenantController extends Controller
         }
 
         $tenantUpdate = [];
+        if ($request->filled('name'))       $tenantUpdate['name']          = $request->name;
         if ($request->has('logo'))          $tenantUpdate['logo']          = $request->logo;
         if ($request->has('banner_image'))  $tenantUpdate['banner_image']  = $request->banner_image;
         if ($request->has('instagram_url')) $tenantUpdate['instagram_url'] = $request->instagram_url;
