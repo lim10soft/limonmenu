@@ -13,10 +13,44 @@ use App\Models\Review;
 use App\Models\Tenant;
 use App\Models\TenantUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AdminTenantController extends Controller
 {
+    public function provision(Request $request)
+    {
+        $secret = env('PROVISION_SECRET');
+        if (!$secret || $request->header('X-Provision-Secret') !== $secret) {
+            return response()->json(['error' => 'Yetkisiz'], 401);
+        }
+
+        $request->validate([
+            'slug'     => 'required|string|max:100',
+            'name'     => 'required|string|max:150',
+            'email'    => 'required|email|max:150',
+            'password' => 'required|string|min:4',
+        ]);
+
+        $apiToken = bin2hex(random_bytes(32));
+
+        $tenant = Tenant::updateOrCreate(
+            ['slug' => $request->slug],
+            ['name' => $request->name, 'api_token' => $apiToken, 'active' => true]
+        );
+
+        TenantUser::updateOrCreate(
+            ['tenant_id' => $tenant->id, 'email' => $request->email],
+            ['name' => $request->name, 'password' => Hash::make($request->password), 'role' => 'owner']
+        );
+
+        return response()->json([
+            'success'   => true,
+            'tenant_id' => $tenant->id,
+            'api_token' => $apiToken,
+        ]);
+    }
+
     public function index()
     {
         $tenants = Tenant::withCount('users')->orderByDesc('id')->get();

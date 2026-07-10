@@ -115,3 +115,6 @@ Route::prefix('admin')->group(function () {
 
 // GitHub Webhook — CSRF hariç
 Route::post('/git/webhook', [GitDeployController::class, 'webhook']);
+
+// Tenant otomatik oluşturma (LimonPOS kurulum sihirbazından çağrılır, X-Provision-Secret ile korumalı)
+Route::post('/tenant/provision', [AdminTenantController::class, 'provision']);
