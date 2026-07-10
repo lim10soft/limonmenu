@@ -27,7 +27,7 @@
     <!-- Açıklama -->
     <p
       v-if="product.description"
-      style="font-size:11px; color:#7a6e67; line-height:1.4; margin-bottom:6px; text-align:center; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; width:100%;"
+      style="font-size:11px; color:#7a6e67; line-height:1.4; margin-bottom:6px; text-align:center; width:100%; white-space:normal; word-break:break-word;"
     >{{ product.description }}</p>
 
     <!-- Tükendi -->

@@ -25,8 +25,8 @@
       <!-- Açıklama -->
       <p
         v-if="product.description"
-        class="text-xs mt-0.5 leading-snug line-clamp-2"
-        style="color:#7a6e67;"
+        class="text-xs mt-0.5 leading-snug"
+        style="color:#7a6e67; white-space:normal; word-break:break-word;"
       >{{ product.description }}</p>
 
       <!-- Tükendi -->
