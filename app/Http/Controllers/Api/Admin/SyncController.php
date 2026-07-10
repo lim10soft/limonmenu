@@ -117,6 +117,33 @@ class SyncController extends Controller
         return response()->json(['synced' => $synced]);
     }
 
+    public function syncCategory(Request $request)
+    {
+        $request->validate([
+            'nexopos_id' => 'required|integer',
+            'name'       => 'required|string|max:200',
+            'sort_order' => 'nullable|integer',
+            'image'      => 'nullable|string|max:500',
+        ]);
+
+        $tenant = $request->user()->tenant;
+
+        $category = Category::withoutGlobalScopes()->updateOrCreate(
+            ['tenant_id' => $tenant->id, 'nexopos_id' => $request->nexopos_id],
+            [
+                'name'       => $request->name,
+                'sort_order' => $request->input('sort_order', 0),
+                'active'     => true,
+            ]
+        );
+
+        if ($request->filled('image')) {
+            $category->update(['image' => $request->image]);
+        }
+
+        return response()->json(['success' => true, 'category_id' => $category->id]);
+    }
+
     public function getCompliance(Request $request, int $nexoposId)
     {
         $tenant  = $request->user()->tenant;

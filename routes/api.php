@@ -94,6 +94,7 @@ Route::prefix('admin')->group(function () {
         Route::post('upload-image', [ImageUploadController::class, 'upload']);
 
         Route::post('sync/receive', [SyncController::class, 'receive']);
+        Route::post('sync/category', [SyncController::class, 'syncCategory']);
         Route::post('sync/upload-image/{nexoposId}', [SyncController::class, 'uploadImage']);
         Route::delete('sync/product/{nexoposId}', [SyncController::class, 'deleteByNexoposId']);
         Route::get('sync/compliance/{nexoposId}', [SyncController::class, 'getCompliance']);
