@@ -118,3 +118,4 @@ Route::post('/git/webhook', [GitDeployController::class, 'webhook']);
 
 // Tenant otomatik oluşturma (LimonPOS kurulum sihirbazından çağrılır, X-Provision-Secret ile korumalı)
 Route::post('/tenant/provision', [AdminTenantController::class, 'provision']);
+Route::patch('/tenant/sync-assets', [AdminTenantController::class, 'syncAssets']);

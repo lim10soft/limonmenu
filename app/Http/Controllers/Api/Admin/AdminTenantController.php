@@ -85,6 +85,45 @@ class AdminTenantController extends Controller
         ]);
     }
 
+    public function syncAssets(Request $request)
+    {
+        $secret = env('PROVISION_SECRET');
+        if (!$secret || $request->header('X-Provision-Secret') !== $secret) {
+            return response()->json(['error' => 'Yetkisiz'], 401);
+        }
+
+        $request->validate([
+            'slug'          => 'required|string|max:100',
+            'logo'          => 'nullable|string|max:500',
+            'banner_image'  => 'nullable|string|max:500',
+            'instagram_url' => 'nullable|string|max:500',
+        ]);
+
+        $tenant = Tenant::where('slug', $request->slug)->first();
+        if (!$tenant) {
+            return response()->json(['error' => 'Tenant bulunamadı'], 404);
+        }
+
+        $tenantUpdate = [];
+        if ($request->has('logo'))          $tenantUpdate['logo']          = $request->logo;
+        if ($request->has('banner_image'))  $tenantUpdate['banner_image']  = $request->banner_image;
+        if ($request->has('instagram_url')) $tenantUpdate['instagram_url'] = $request->instagram_url;
+
+        if (!empty($tenantUpdate)) {
+            $tenant->update($tenantUpdate);
+        }
+
+        // İlk departmanın banner_image'ını güncelle
+        if ($request->has('banner_image')) {
+            Department::where('tenant_id', $tenant->id)
+                ->orderBy('sort_order')
+                ->first()
+                ?->update(['banner_image' => $request->banner_image]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     public function index()
     {
         $tenants = Tenant::withCount('users')->orderByDesc('id')->get();
