@@ -39,16 +39,22 @@ class SyncController extends Controller
                     ->first();
             }
 
+            $catSortOrder = isset($p['category_sort_order']) && is_numeric($p['category_sort_order'])
+                ? (int) $p['category_sort_order']
+                : 0;
+
             if (! $category) {
                 $category = Category::withoutGlobalScopes()->firstOrCreate(
                     ['tenant_id' => $tenant->id, 'name' => $catName],
-                    ['nexopos_id' => $catNexoposId, 'active' => true, 'sort_order' => 0]
+                    ['nexopos_id' => $catNexoposId, 'active' => true, 'sort_order' => $catSortOrder]
                 );
 
                 // İsimle bulunan kaydın nexopos_id'si yoksa güncelle
                 if ($catNexoposId && ! $category->nexopos_id) {
                     $category->update(['nexopos_id' => $catNexoposId]);
                 }
+            } else {
+                $category->update(['sort_order' => $catSortOrder]);
             }
 
             // Kategori resmini güncelle
