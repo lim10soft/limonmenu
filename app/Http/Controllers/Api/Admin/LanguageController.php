@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TenantLanguage;
 use Illuminate\Http\Request;
 
-const ALL_LANG_CODES = ['tr','en','ru','ar','zh','ja','ko','pt','es','de','fr','it'];
+const ALL_LANG_CODES = ['tr','en','ru','ka','ar','zh','ja','ko','pt','es','de','fr','it'];
 
 class LanguageController extends Controller
 {
