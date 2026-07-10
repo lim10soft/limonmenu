@@ -60,7 +60,7 @@ class AdminTenantController extends Controller
         }
 
         // Tüm diller aktif olarak oluştur
-        $allLangs = ['tr','en','ru','ar','zh','ja','ko','pt','es','de','fr','it'];
+        $allLangs = ['tr','en','ru','ka','ar','zh','ja','ko','pt','es','de','fr','it'];
         foreach ($allLangs as $i => $code) {
             TenantLanguage::updateOrCreate(
                 ['tenant_id' => $tenant->id, 'lang_code' => $code],
