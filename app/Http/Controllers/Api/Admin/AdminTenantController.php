@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\CategoryTranslation;
+use App\Models\Department;
 use App\Models\DepartmentCategoryOverride;
 use App\Models\DepartmentProductOverride;
 use App\Models\OrderItem;
@@ -11,6 +12,7 @@ use App\Models\ProductTranslation;
 use App\Models\ProductUnit;
 use App\Models\Review;
 use App\Models\Tenant;
+use App\Models\TenantLanguage;
 use App\Models\TenantUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -26,28 +28,60 @@ class AdminTenantController extends Controller
         }
 
         $request->validate([
-            'slug'     => 'required|string|max:100',
-            'name'     => 'required|string|max:150',
-            'email'    => 'required|email|max:150',
-            'password' => 'required|string|min:4',
+            'slug'            => 'required|string|max:100',
+            'restaurant_name' => 'required|string|max:150',
+            'user_name'       => 'required|string|max:150',
+            'email'           => 'required|email|max:150',
+            'password'        => 'required|string|min:4',
         ]);
-
-        $apiToken = bin2hex(random_bytes(32));
 
         $tenant = Tenant::updateOrCreate(
             ['slug' => $request->slug],
-            ['name' => $request->name, 'api_token' => $apiToken, 'active' => true]
+            [
+                'name'           => $request->restaurant_name,
+                'active'         => true,
+                'plan'           => 'free',
+                'theme_color'    => '#f97316',
+                'primary_lang'   => 'tr',
+                'tables_enabled' => false,
+                'orders_enabled' => false,
+            ]
         );
 
-        TenantUser::updateOrCreate(
+        // Varsayılan "Menü" departmanı (sadece ilk kurulumda)
+        if ($tenant->wasRecentlyCreated) {
+            Department::create([
+                'tenant_id'        => $tenant->id,
+                'name'             => 'Menü',
+                'active'           => true,
+                'sort_order'       => 1,
+                'price_multiplier' => 1.00,
+            ]);
+        }
+
+        // Tüm diller aktif olarak oluştur
+        $allLangs = ['tr','en','ru','ar','zh','ja','ko','pt','es','de','fr','it'];
+        foreach ($allLangs as $i => $code) {
+            TenantLanguage::updateOrCreate(
+                ['tenant_id' => $tenant->id, 'lang_code' => $code],
+                ['active' => true, 'sort_order' => $i]
+            );
+        }
+
+        $user = TenantUser::updateOrCreate(
             ['tenant_id' => $tenant->id, 'email' => $request->email],
-            ['name' => $request->name, 'password' => Hash::make($request->password), 'role' => 'owner']
+            ['name' => $request->user_name, 'password' => Hash::make($request->password), 'role' => 'owner']
         );
+
+        // Sanctum integration token oluştur (login'de yeniden oluşturulmaması için)
+        $user->tokens()->where('name', 'integration')->delete();
+        $plainToken = $user->createToken('integration')->plainTextToken;
+        $tenant->update(['api_token' => $plainToken]);
 
         return response()->json([
             'success'   => true,
             'tenant_id' => $tenant->id,
-            'api_token' => $apiToken,
+            'api_token' => $plainToken,
         ]);
     }
 
