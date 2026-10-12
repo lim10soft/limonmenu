@@ -184,9 +184,22 @@ class MenuController extends Controller
 
         $units = [];
         if ($product->relationLoaded('units') && $product->units->count() > 0) {
-            $units = $product->units->map(function ($u) use ($override, $department, $product) {
+            // Birim bazlı departman fiyatı yalnızca birim sayısı tutuyorsa ve ilk birim
+            // departman fiyatıyla aynıysa güvenilir (panelden elle değiştirilen fiyat oranla hesaplanır)
+            $unitPrices = is_array($override?->unit_prices) ? array_values($override->unit_prices) : null;
+            if ($unitPrices !== null && (
+                count($unitPrices) !== $product->units->count()
+                || ! is_numeric($unitPrices[0] ?? null)
+                || abs((float) $unitPrices[0] - (float) $override->price) > 0.005
+            )) {
+                $unitPrices = null;
+            }
+
+            $units = $product->units->values()->map(function ($u, $i) use ($override, $department, $product, $unitPrices) {
                 $unitPrice = $u->price;
-                if ($override?->price !== null) {
+                if ($override?->price !== null && $unitPrices !== null && is_numeric($unitPrices[$i] ?? null)) {
+                    $unitPrice = round((float) $unitPrices[$i], 2);
+                } elseif ($override?->price !== null) {
                     // Scale unit price proportionally when there's a department override
                     $ratio = $product->price > 0 ? $override->price / $product->price : 1;
                     $unitPrice = round($u->price * $ratio, 2);

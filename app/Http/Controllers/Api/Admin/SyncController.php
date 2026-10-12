@@ -9,6 +9,7 @@ use App\Models\DepartmentProductOverride;
 use App\Models\Product;
 use App\Models\ProductUnit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class SyncController extends Controller
@@ -111,9 +112,31 @@ class SyncController extends Controller
             $wholesalePrice  = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : 0;
             $dept2Price      = $wholesalePrice > 0 ? $wholesalePrice : $salePrice;
             if ($dept2Price !== null && $dept2Price > 0 && $depts->count() >= 2) {
+                $dept2Values = ['price' => $dept2Price, 'hidden' => false];
+
+                // Her birimin kendi paket fiyatı; 0 ise o birimin normal fiyatı
+                if ($this->unitPricesColumnExists()) {
+                    $dept2UnitPrices = null;
+                    if (! empty($p['units']) && is_array($p['units'])) {
+                        $hasUnitWholesale = false;
+                        $dept2UnitPrices  = [];
+                        foreach ($p['units'] as $unit) {
+                            $unitWholesale = isset($unit['wholesale_price']) ? (float) $unit['wholesale_price'] : 0;
+                            if (array_key_exists('wholesale_price', $unit)) {
+                                $hasUnitWholesale = true;
+                            }
+                            $dept2UnitPrices[] = $unitWholesale > 0 ? $unitWholesale : (float) ($unit['price'] ?? 0);
+                        }
+                        if (! $hasUnitWholesale) {
+                            $dept2UnitPrices = null;
+                        }
+                    }
+                    $dept2Values['unit_prices'] = $dept2UnitPrices;
+                }
+
                 DepartmentProductOverride::updateOrCreate(
                     ['department_id' => $depts[1]->id, 'product_id' => $product->id],
-                    ['price' => $dept2Price, 'hidden' => false]
+                    $dept2Values
                 );
             }
 
@@ -121,6 +144,14 @@ class SyncController extends Controller
         }
 
         return response()->json(['synced' => $synced]);
+    }
+
+    // Migration henüz çalışmadıysa senkron bozulmasın
+    private function unitPricesColumnExists(): bool
+    {
+        static $exists = null;
+
+        return $exists ??= Schema::hasColumn('department_product_overrides', 'unit_prices');
     }
 
     public function syncCategory(Request $request)

@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DepartmentProductOverride extends Model
 {
-    protected $fillable = ['department_id', 'product_id', 'hidden', 'price'];
+    protected $fillable = ['department_id', 'product_id', 'hidden', 'price', 'unit_prices'];
 
     protected $casts = [
-        'hidden' => 'boolean',
-        'price'  => 'float',
+        'hidden'      => 'boolean',
+        'price'       => 'float',
+        'unit_prices' => 'array',
     ];
 
     public function department(): BelongsTo
