@@ -75,6 +75,7 @@
     at_least_one_lang: '少なくとも1つの言語を有効にする必要があります', features_title: '機能設定', tables_enabled_label: 'テーブル', tables_enabled_desc: 'オン: 各テーブルにQRコード。', orders_enabled_label: '注文', orders_enabled_desc: 'オフ: メニュー閲覧のみ。',
   },
   departments: {
+    price_type_label: 'POS 価格', price_type_desc: 'レストランソフトのどの価格をこの部門に書き込みますか？次回の同期で反映されます。', price_type_normal: '店内価格', price_type_paket: 'テイクアウト価格', price_type_none: 'POS から価格を取得しない', price_type_normal_badge: '店内価格', price_type_paket_badge: 'テイクアウト価格',
     title: '部門', add: '+ 追加', add_title: '新しい部門', edit_title: '部門を編集', name: '部門名', empty: '部門がありません。', multiplier: '価格倍率', multiplier_label: '価格倍率', multiplier_desc: '1.00=通常, 1.20=+20%, 0.90=-10%', products_btn: '商品', products_title: '商品設定', base_price: '基本価格', override_price_ph: 'カスタム価格', hide_product: '非表示', show_product: '表示', confirm_delete: 'この部門を削除しますか？',
   },
 }

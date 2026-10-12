@@ -75,6 +75,7 @@
     at_least_one_lang: 'Mindestens eine Sprache muss aktiv sein', features_title: 'Funktionseinstellungen', tables_enabled_label: 'Tischsystem', tables_enabled_desc: 'Aktiviert: jeder Tisch hat QR.', orders_enabled_label: 'Bestellsystem', orders_enabled_desc: 'Deaktiviert: Kunden sehen nur die Speisekarte.',
   },
   departments: {
+    price_type_label: 'POS-Preis', price_type_desc: 'Welcher Preis aus der Kassensoftware soll in diese Abteilung geschrieben werden? Gilt ab der nächsten Synchronisierung.', price_type_normal: 'Preis im Lokal', price_type_paket: 'Lieferpreis', price_type_none: 'Keine Preise vom POS übernehmen', price_type_normal_badge: 'Preis im Lokal', price_type_paket_badge: 'Lieferpreis',
     title: 'Abteilungen', add: '+ Hinzufügen', add_title: 'Neue Abteilung', edit_title: 'Abteilung bearbeiten', name: 'Abteilungsname', empty: 'Keine Abteilungen.', multiplier: 'Preisfaktor', multiplier_label: 'Preisfaktor', multiplier_desc: '1.00=normal, 1.20=+20%, 0.90=-10%', products_btn: 'Produkte', products_title: 'Produkte', base_price: 'Grundpreis', override_price_ph: 'Sonderpreis', hide_product: 'Ausblenden', show_product: 'Anzeigen', confirm_delete: 'Abteilung wirklich löschen?',
   },
 }

@@ -25,6 +25,7 @@ export interface Department {
   banner_image: string | null
   token: string
   price_multiplier: number
+  price_type?: 'normal' | 'paket' | null
   active: boolean
   sort_order: number
 }

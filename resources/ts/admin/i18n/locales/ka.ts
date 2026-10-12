@@ -101,6 +101,7 @@ export default {
     git_pull_btn: 'Git Pull', git_pulling: 'იტვირთება...',
   },
   departments: {
+    price_type_label: 'POS ფასი', price_type_desc: 'რესტორნის პროგრამიდან რომელი ფასი ჩაიწეროს ამ დეპარტამენტში? გამოიყენება შემდეგი სინქრონიზაციისას.', price_type_normal: 'დარბაზის ფასი', price_type_paket: 'გასატანი ფასი', price_type_none: 'POS-იდან ფასის არაღება', price_type_normal_badge: 'დარბაზის ფასი', price_type_paket_badge: 'გასატანი ფასი',
     title: 'განყოფილებები', add: '+ განყოფილების დამატება',
     add_title: 'ახალი განყოფილება', edit_title: 'განყოფილების რედაქტირება',
     name: 'განყოფილების სახელი', empty: 'განყოფილებები ჯერ არ დამატებულა.',

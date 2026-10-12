@@ -74,6 +74,7 @@
     at_least_one_lang: 'Должен быть активен хотя бы один язык', features_title: 'Настройки', tables_enabled_label: 'Столики', tables_enabled_desc: 'Включено: у каждого стола QR-код.', orders_enabled_label: 'Заказы', orders_enabled_desc: 'Выключено: только просмотр меню.',
   },
   departments: {
+    price_type_label: 'Цена из POS', price_type_desc: 'Какую цену из кассовой программы записывать в этот отдел? Применяется при следующей синхронизации.', price_type_normal: 'Цена в зале', price_type_paket: 'Цена на вынос', price_type_none: 'Не брать цены из POS', price_type_normal_badge: 'Цена в зале', price_type_paket_badge: 'Цена на вынос',
     title: 'Отделы', add: '+ Добавить', add_title: 'Новый отдел', edit_title: 'Редактировать', name: 'Название', empty: 'Отделов нет.', multiplier: 'Множитель', multiplier_label: 'Множитель цены', multiplier_desc: '1.00=обычный, 1.20=+20%, 0.90=-10%', products_btn: 'Товары', products_title: 'Товары', base_price: 'Базовая цена', override_price_ph: 'Спец. цена', hide_product: 'Скрыть', show_product: 'Показать', confirm_delete: 'Удалить отдел?',
   },
 }

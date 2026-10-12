@@ -98,6 +98,7 @@
     git_pull_btn: 'Git Pull', git_pulling: 'Pulling...',
   },
   departments: {
+    price_type_label: 'POS Price', price_type_desc: 'Which price from the restaurant software should be written to this department? Applied on the next sync.', price_type_normal: 'Dine-in price', price_type_paket: 'Takeaway price', price_type_none: 'Do not take prices from POS', price_type_normal_badge: 'Dine-in price', price_type_paket_badge: 'Takeaway price',
     title: 'Departments', add: '+ Add Department', add_title: 'New Department', edit_title: 'Edit Department', name: 'Department Name', empty: 'No departments yet.', multiplier: 'Price multiplier', multiplier_label: 'Price Multiplier', multiplier_desc: '1.00=normal, 1.20=+20%, 0.90=-10%',
     display_name: 'Display Name', display_name_desc: 'Name shown on the menu (leave empty to use department name)',
     logo: 'Department Logo', logo_desc: 'Logo shown on the menu instead of the business logo',

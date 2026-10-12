@@ -75,6 +75,7 @@
     at_least_one_lang: '至少需要一种语言处于活跃状态', features_title: '功能设置', tables_enabled_label: '桌位系统', tables_enabled_desc: '开启后每张桌子有独立二维码。', orders_enabled_label: '点单系统', orders_enabled_desc: '关闭后顾客只能浏览菜单。',
   },
   departments: {
+    price_type_label: 'POS 价格', price_type_desc: '将餐厅软件中的哪种价格写入此部门？下次同步时生效。', price_type_normal: '堂食价格', price_type_paket: '外卖价格', price_type_none: '不使用 POS 价格', price_type_normal_badge: '堂食价格', price_type_paket_badge: '外卖价格',
     title: '部门', add: '+ 添加部门', add_title: '新部门', edit_title: '编辑部门', name: '部门名称', empty: '暂无部门。', multiplier: '价格倍数', multiplier_label: '价格倍数', multiplier_desc: '1.00=正常, 1.20=+20%, 0.90=-10%', products_btn: '产品', products_title: '产品设置', base_price: '基础价格', override_price_ph: '自定义价格', hide_product: '隐藏', show_product: '显示', confirm_delete: '确定删除此部门？',
   },
 }

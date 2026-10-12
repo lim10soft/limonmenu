@@ -75,6 +75,7 @@
     at_least_one_lang: '최소 하나의 언어가 활성화되어야 합니다', features_title: '기능 설정', tables_enabled_label: '테이블 시스템', tables_enabled_desc: '활성화: 각 테이블에 QR 코드.', orders_enabled_label: '주문 시스템', orders_enabled_desc: '비활성화: 메뉴만 볼 수 있습니다.',
   },
   departments: {
+    price_type_label: 'POS 가격', price_type_desc: '레스토랑 소프트웨어의 어떤 가격을 이 부서에 기록할까요? 다음 동기화 때 적용됩니다.', price_type_normal: '매장 가격', price_type_paket: '포장 가격', price_type_none: 'POS 가격을 가져오지 않음', price_type_normal_badge: '매장 가격', price_type_paket_badge: '포장 가격',
     title: '부서', add: '+ 추가', add_title: '새 부서', edit_title: '편집', name: '부서 이름', empty: '부서 없음.', multiplier: '가격 배수', multiplier_label: '가격 배수', multiplier_desc: '1.00=정상, 1.20=+20%, 0.90=-10%', products_btn: '제품', products_title: '제품 설정', base_price: '기본 가격', override_price_ph: '맞춤 가격', hide_product: '숨기기', show_product: '표시', confirm_delete: '이 부서를 삭제할까요?',
   },
 }

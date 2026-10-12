@@ -75,6 +75,7 @@
     at_least_one_lang: 'Pelo menos um idioma deve estar ativo', features_title: 'Configurações', tables_enabled_label: 'Sistema mesas', tables_enabled_desc: 'Ativado: cada mesa tem seu QR.', orders_enabled_label: 'Sistema pedidos', orders_enabled_desc: 'Desativado: clientes só visualizam o menu.',
   },
   departments: {
+    price_type_label: 'Preço POS', price_type_desc: 'Qual preço do software do restaurante deve ser gravado neste departamento? Aplicado na próxima sincronização.', price_type_normal: 'Preço no local', price_type_paket: 'Preço para viagem', price_type_none: 'Não usar preços do POS', price_type_normal_badge: 'Preço no local', price_type_paket_badge: 'Preço para viagem',
     title: 'Departamentos', add: '+ Adicionar', add_title: 'Novo', edit_title: 'Editar', name: 'Nome', empty: 'Sem departamentos.', multiplier: 'Multiplicador', multiplier_label: 'Multiplicador preço', multiplier_desc: '1.00=normal, 1.20=+20%, 0.90=-10%', products_btn: 'Produtos', products_title: 'Produtos', base_price: 'Preço base', override_price_ph: 'Preço especial', hide_product: 'Ocultar', show_product: 'Mostrar', confirm_delete: 'Excluir departamento?',
   },
 }

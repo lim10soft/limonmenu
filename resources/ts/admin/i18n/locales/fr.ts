@@ -75,6 +75,7 @@
     at_least_one_lang: 'Au moins une langue doit être active', features_title: 'Fonctionnalités', tables_enabled_label: 'Système tables', tables_enabled_desc: 'Activé: chaque table a son QR.', orders_enabled_label: 'Système commandes', orders_enabled_desc: 'Désactivé: les clients voient seulement le menu.',
   },
   departments: {
+    price_type_label: 'Prix POS', price_type_desc: 'Quel prix du logiciel de caisse doit être écrit dans ce département ? Appliqué à la prochaine synchronisation.', price_type_normal: 'Prix sur place', price_type_paket: 'Prix à emporter', price_type_none: 'Ne pas prendre les prix du POS', price_type_normal_badge: 'Prix sur place', price_type_paket_badge: 'Prix à emporter',
     title: 'Départements', add: '+ Ajouter', add_title: 'Nouveau', edit_title: 'Modifier', name: 'Nom', empty: 'Aucun département.', multiplier: 'Multiplicateur', multiplier_label: 'Multiplicateur de prix', multiplier_desc: '1.00=normal, 1.20=+20%, 0.90=-10%', products_btn: 'Produits', products_title: 'Produits', base_price: 'Prix de base', override_price_ph: 'Prix perso', hide_product: 'Masquer', show_product: 'Afficher', confirm_delete: 'Supprimer ce département ?',
   },
 }

@@ -101,6 +101,7 @@
     git_pull_btn: 'Git Pull', git_pulling: 'Çekiliyor...',
   },
   departments: {
+    price_type_label: 'POS Fiyatı', price_type_desc: 'Restoran yazılımından gelen hangi fiyat bu departmana yazılsın? Değişiklik bir sonraki senkronda uygulanır.', price_type_normal: 'İç (salon) fiyatı', price_type_paket: 'Paket fiyatı', price_type_none: 'POS\'tan fiyat alma', price_type_normal_badge: 'İç fiyat', price_type_paket_badge: 'Paket fiyatı',
     title: 'Departmanlar', add: '+ Departman Ekle',
     add_title: 'Yeni Departman', edit_title: 'Departmanı Düzenle',
     name: 'Departman Adı', empty: 'Henüz departman eklenmemiş.',

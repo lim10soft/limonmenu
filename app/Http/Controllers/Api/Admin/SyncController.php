@@ -25,6 +25,8 @@ class SyncController extends Controller
             return response()->json(['message' => 'Gönderilen ürün verisi boş.', 'synced' => 0], 422);
         }
 
+        [$normalDeptIds, $paketDeptIds] = $this->priceTargetDepartments($tenant->id);
+
         foreach ($products as $p) {
             if (empty($p['id'])) continue;
 
@@ -92,26 +94,26 @@ class SyncController extends Controller
                 }
             }
 
-            // Departman fiyatları — tenant'ın departmanları sırayla
-            $depts = Department::withoutGlobalScopes()
-                ->where('tenant_id', $tenant->id)
-                ->orderBy('sort_order')
-                ->take(2)
-                ->get();
-
-            // 1. departman → sale_price
+            // "İç fiyat" departmanları → sale_price
             $salePrice = isset($p['sale_price']) ? (float) $p['sale_price'] : null;
-            if ($salePrice !== null && $salePrice > 0 && $depts->count() >= 1) {
-                DepartmentProductOverride::updateOrCreate(
-                    ['department_id' => $depts[0]->id, 'product_id' => $product->id],
-                    ['price' => $salePrice, 'hidden' => false]
-                );
+            if ($salePrice !== null && $salePrice > 0 && $normalDeptIds) {
+                $normalValues = ['price' => $salePrice, 'hidden' => false];
+                if ($this->unitPricesColumnExists()) {
+                    // Departman daha önce paket türündeyse kalan birim fiyatları temizlenir
+                    $normalValues['unit_prices'] = null;
+                }
+                foreach ($normalDeptIds as $deptId) {
+                    DepartmentProductOverride::updateOrCreate(
+                        ['department_id' => $deptId, 'product_id' => $product->id],
+                        $normalValues
+                    );
+                }
             }
 
-            // 2. departman → wholesale_price, 0 ise sale_price kullan
+            // "Paket fiyatı" departmanları → wholesale_price, 0 ise sale_price kullan
             $wholesalePrice  = isset($p['wholesale_price']) ? (float) $p['wholesale_price'] : 0;
             $dept2Price      = $wholesalePrice > 0 ? $wholesalePrice : $salePrice;
-            if ($dept2Price !== null && $dept2Price > 0 && $depts->count() >= 2) {
+            if ($dept2Price !== null && $dept2Price > 0 && $paketDeptIds) {
                 $dept2Values = ['price' => $dept2Price, 'hidden' => false];
 
                 // Her birimin kendi paket fiyatı; 0 ise o birimin normal fiyatı
@@ -134,16 +136,43 @@ class SyncController extends Controller
                     $dept2Values['unit_prices'] = $dept2UnitPrices;
                 }
 
-                DepartmentProductOverride::updateOrCreate(
-                    ['department_id' => $depts[1]->id, 'product_id' => $product->id],
-                    $dept2Values
-                );
+                foreach ($paketDeptIds as $deptId) {
+                    DepartmentProductOverride::updateOrCreate(
+                        ['department_id' => $deptId, 'product_id' => $product->id],
+                        $dept2Values
+                    );
+                }
             }
 
             $synced++;
         }
 
         return response()->json(['synced' => $synced]);
+    }
+
+    /**
+     * POS fiyatlarının yazılacağı departmanlar: [iç fiyat alanlar, paket fiyatı alanlar].
+     * Tür panelden seçilir (departments.price_type); kolon yoksa eski sıra kuralı geçerli.
+     */
+    private function priceTargetDepartments(int $tenantId): array
+    {
+        $depts = Department::withoutGlobalScopes()
+            ->where('tenant_id', $tenantId)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        if (! Department::hasPriceTypeColumn()) {
+            return [
+                $depts->slice(0, 1)->pluck('id')->all(),
+                $depts->slice(1, 1)->pluck('id')->all(),
+            ];
+        }
+
+        return [
+            $depts->where('price_type', Department::PRICE_TYPE_NORMAL)->pluck('id')->all(),
+            $depts->where('price_type', Department::PRICE_TYPE_PAKET)->pluck('id')->all(),
+        ];
     }
 
     // Migration henüz çalışmadıysa senkron bozulmasın

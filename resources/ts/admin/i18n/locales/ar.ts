@@ -75,6 +75,7 @@
     at_least_one_lang: 'يجب أن تكون لغة واحدة على الأقل نشطة', features_title: 'الميزات', tables_enabled_label: 'نظام الطاولات', tables_enabled_desc: 'مفعل: لكل طاولة رمز QR.', orders_enabled_label: 'نظام الطلبات', orders_enabled_desc: 'معطل: العملاء يرون القائمة فقط.',
   },
   departments: {
+    price_type_label: 'سعر نقطة البيع', price_type_desc: 'أي سعر من برنامج المطعم يُكتب في هذا القسم؟ يُطبَّق عند المزامنة التالية.', price_type_normal: 'سعر الصالة', price_type_paket: 'سعر الطلبات الخارجية', price_type_none: 'عدم أخذ الأسعار من نقطة البيع', price_type_normal_badge: 'سعر الصالة', price_type_paket_badge: 'سعر الطلبات الخارجية',
     title: 'الأقسام', add: '+ إضافة', add_title: 'قسم جديد', edit_title: 'تعديل', name: 'اسم القسم', empty: 'لا توجد أقسام.', multiplier: 'مضاعف', multiplier_label: 'مضاعف السعر', multiplier_desc: '1.00=عادي, 1.20=+20%, 0.90=-10%', products_btn: 'المنتجات', products_title: 'المنتجات', base_price: 'السعر الأساسي', override_price_ph: 'سعر مخصص', hide_product: 'إخفاء', show_product: 'إظهار', confirm_delete: 'حذف هذا القسم?',
   },
 }

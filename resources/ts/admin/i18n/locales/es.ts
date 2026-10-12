@@ -75,6 +75,7 @@
     at_least_one_lang: 'Al menos un idioma debe estar activo', features_title: 'Configuración', tables_enabled_label: 'Sistema mesas', tables_enabled_desc: 'Activado: cada mesa tiene su QR.', orders_enabled_label: 'Sistema pedidos', orders_enabled_desc: 'Desactivado: clientes solo ven el menú.',
   },
   departments: {
+    price_type_label: 'Precio POS', price_type_desc: '¿Qué precio del software del restaurante se escribe en este departamento? Se aplica en la próxima sincronización.', price_type_normal: 'Precio en local', price_type_paket: 'Precio para llevar', price_type_none: 'No tomar precios del POS', price_type_normal_badge: 'Precio en local', price_type_paket_badge: 'Precio para llevar',
     title: 'Departamentos', add: '+ Agregar', add_title: 'Nuevo', edit_title: 'Editar', name: 'Nombre', empty: 'Sin departamentos.', multiplier: 'Multiplicador', multiplier_label: 'Multiplicador precio', multiplier_desc: '1.00=normal, 1.20=+20%, 0.90=-10%', products_btn: 'Productos', products_title: 'Productos', base_price: 'Precio base', override_price_ph: 'Precio especial', hide_product: 'Ocultar', show_product: 'Mostrar', confirm_delete: '¿Eliminar departamento?',
   },
 }

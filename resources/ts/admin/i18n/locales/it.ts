@@ -75,6 +75,7 @@
     at_least_one_lang: 'Almeno una lingua deve essere attiva', features_title: 'Funzionalità', tables_enabled_label: 'Sistema tavoli', tables_enabled_desc: 'Attivo: ogni tavolo ha il suo QR.', orders_enabled_label: 'Sistema ordini', orders_enabled_desc: 'Disattivo: i clienti vedono solo il menu.',
   },
   departments: {
+    price_type_label: 'Prezzo POS', price_type_desc: 'Quale prezzo del software di cassa va scritto in questo reparto? Applicato alla prossima sincronizzazione.', price_type_normal: 'Prezzo al tavolo', price_type_paket: 'Prezzo asporto', price_type_none: 'Non prendere i prezzi dal POS', price_type_normal_badge: 'Prezzo al tavolo', price_type_paket_badge: 'Prezzo asporto',
     title: 'Reparti', add: '+ Aggiungi', add_title: 'Nuovo reparto', edit_title: 'Modifica', name: 'Nome reparto', empty: 'Nessun reparto.', multiplier: 'Moltiplicatore', multiplier_label: 'Moltiplicatore prezzo', multiplier_desc: '1.00=normale, 1.20=+20%, 0.90=-10%', products_btn: 'Prodotti', products_title: 'Prodotti', base_price: 'Prezzo base', override_price_ph: 'Prezzo custom', hide_product: 'Nascondi', show_product: 'Mostra', confirm_delete: 'Eliminare questo reparto?',
   },
 }

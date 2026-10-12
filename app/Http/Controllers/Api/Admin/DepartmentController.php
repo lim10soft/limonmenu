@@ -32,9 +32,14 @@ class DepartmentController extends Controller
             'logo'             => 'nullable|string|max:500',
             'banner_image'     => 'nullable|string|max:500',
             'price_multiplier' => 'nullable|numeric|min:0.01|max:99.99',
+            'price_type'       => 'nullable|in:normal,paket',
             'active'           => 'boolean',
             'sort_order'       => 'integer',
         ]);
+
+        if (! Department::hasPriceTypeColumn()) {
+            unset($data['price_type']);
+        }
 
         $data['tenant_id'] = $tenant->id;
         $data['price_multiplier'] = $data['price_multiplier'] ?? 1.00;
@@ -55,9 +60,14 @@ class DepartmentController extends Controller
             'logo'             => 'sometimes|nullable|string|max:500',
             'banner_image'     => 'sometimes|nullable|string|max:500',
             'price_multiplier' => 'sometimes|numeric|min:0.01|max:99.99',
+            'price_type'       => 'sometimes|nullable|in:normal,paket',
             'active'           => 'sometimes|boolean',
             'sort_order'       => 'sometimes|integer',
         ]);
+
+        if (! Department::hasPriceTypeColumn()) {
+            unset($data['price_type']);
+        }
 
         $dept->update($data);
 

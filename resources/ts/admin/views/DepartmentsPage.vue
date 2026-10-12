@@ -32,6 +32,11 @@
           <p class="text-xs text-gray-400 mt-0.5">
             {{ dept.name }} · {{ t('departments.multiplier') }}: ×{{ dept.price_multiplier.toFixed(2) }}
           </p>
+          <span
+            v-if="dept.price_type"
+            class="inline-block mt-1 px-2 py-0.5 rounded-full text-[11px] font-medium"
+            :class="dept.price_type === 'paket' ? 'bg-purple-50 text-purple-600' : 'bg-green-50 text-green-600'"
+          >{{ dept.price_type === 'paket' ? t('departments.price_type_paket_badge') : t('departments.price_type_normal_badge') }}</span>
         </div>
 
         <div class="flex items-center gap-2 shrink-0 flex-wrap justify-end">
@@ -126,6 +131,15 @@
           <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('departments.multiplier_label') }}</label>
           <p class="text-xs text-gray-400 mb-1.5">{{ t('departments.multiplier_desc') }}</p>
           <input v-model.number="formData.price_multiplier" type="number" step="0.01" min="0.01" max="99.99" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('departments.price_type_label') }}</label>
+          <p class="text-xs text-gray-400 mb-1.5">{{ t('departments.price_type_desc') }}</p>
+          <select v-model="formData.price_type" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-300">
+            <option value="normal">{{ t('departments.price_type_normal') }}</option>
+            <option value="paket">{{ t('departments.price_type_paket') }}</option>
+            <option value="">{{ t('departments.price_type_none') }}</option>
+          </select>
         </div>
       </div>
       <div class="flex gap-2 mt-5">
@@ -273,7 +287,7 @@ const logoUploading = ref(false)
 
 const showForm = ref(false)
 const editing = ref<Department | null>(null)
-const formData = ref({ name: '', display_name: '', logo: '', banner_image: '', price_multiplier: 1.00 })
+const formData = ref({ name: '', display_name: '', logo: '', banner_image: '', price_multiplier: 1.00, price_type: 'normal' as string })
 const bannerUploading = ref(false)
 
 const showProducts = ref(false)
@@ -298,7 +312,7 @@ async function load() {
 
 function openAdd() {
   editing.value = null
-  formData.value = { name: '', display_name: '', logo: '', banner_image: '', price_multiplier: 1.00 }
+  formData.value = { name: '', display_name: '', logo: '', banner_image: '', price_multiplier: 1.00, price_type: 'normal' }
   showForm.value = true
 }
 
@@ -310,6 +324,7 @@ function openEdit(dept: Department) {
     logo: dept.logo ?? '',
     banner_image: dept.banner_image ?? '',
     price_multiplier: dept.price_multiplier,
+    price_type: dept.price_type ?? '',
   }
   showForm.value = true
 }
@@ -352,6 +367,7 @@ async function saveForm() {
       logo: formData.value.logo || null,
       banner_image: formData.value.banner_image || null,
       price_multiplier: formData.value.price_multiplier,
+      price_type: formData.value.price_type || null,
     }
     if (editing.value) {
       await http.patch(`/admin/departments/${editing.value.id}`, payload)
