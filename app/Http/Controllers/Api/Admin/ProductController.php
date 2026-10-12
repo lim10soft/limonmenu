@@ -163,6 +163,22 @@ class ProductController extends Controller
         return response()->json(['message' => 'Silindi.']);
     }
 
+    public function bulkDestroy(Request $request)
+    {
+        $data = $request->validate([
+            'ids'   => 'required|array|min:1|max:500',
+            'ids.*' => 'integer',
+        ]);
+
+        $tenant  = $request->user()->tenant;
+        $deleted = Product::withoutGlobalScopes()
+            ->where('tenant_id', $tenant->id)
+            ->whereIn('id', array_unique($data['ids']))
+            ->delete();
+
+        return response()->json(['message' => 'Silindi.', 'deleted' => $deleted]);
+    }
+
     private function saveDepartmentPrices(int $productId, int $tenantId, array $deptPrices): void
     {
         $validIds = Department::where('tenant_id', $tenantId)->pluck('id')->flip();

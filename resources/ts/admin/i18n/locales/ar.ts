@@ -36,6 +36,7 @@
     price: 'السعر (₺) *', description: 'الوصف الافتراضي', image_url: 'رابط الصورة',
     translations_label: 'الترجمات', confirm_delete: 'هل أنت متأكد من حذف هذا المنتج؟',
     parent_label: 'الفئة الأم', no_parent: 'لا يوجد (فئة جذر)', span_label: 'عرض البطاقة', span_normal: 'عادي', span_wide: 'عريض', span_desc: 'تمتد البطاقة العريضة على كامل العرض.', wide: 'عريض',
+    selected_count: 'تم تحديد {count} منتج', clear_selection: 'مسح التحديد', delete_selected: 'حذف المحدد', bulk_deleting: 'جارٍ الحذف...', select_page: 'تحديد كل ما في هذه الصفحة', bulk_delete_confirm: 'سيتم حذف {count} منتج. هل أنت متأكد؟', bulk_delete_done: 'تم حذف {count} منتج.', bulk_delete_error: 'فشل الحذف الجماعي.',
   },
   categories: {
     title: 'الفئات', add: '+ إضافة فئة',

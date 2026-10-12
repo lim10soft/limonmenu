@@ -46,6 +46,7 @@
     name: 'Varsayılan Ad *', category: 'Kategori *',
     price: 'Fiyat (₺) *', description: 'Varsayılan Açıklama', image_url: 'Görsel URL',
     translations_label: 'Çeviriler', confirm_delete: 'Bu ürünü silmek istediğinize emin misiniz?',
+    selected_count: '{count} ürün seçildi', clear_selection: 'Seçimi Temizle', delete_selected: 'Seçilenleri Sil', bulk_deleting: 'Siliniyor...', select_page: 'Bu sayfadakilerin tümünü seç', bulk_delete_confirm: '{count} ürün silinecek. Emin misiniz?', bulk_delete_done: '{count} ürün silindi.', bulk_delete_error: 'Toplu silme başarısız oldu.',
   },
   categories: {
     title: 'Kategoriler', add: '+ Kategori Ekle',

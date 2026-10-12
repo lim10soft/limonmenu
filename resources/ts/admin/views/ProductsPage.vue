@@ -61,14 +61,33 @@
       </div>
 
       <template v-else>
+        <!-- Toplu seçim şeridi -->
+        <div v-if="selectedIds.length > 0" class="sticky top-2 z-20 mb-3 flex flex-wrap items-center justify-between gap-2 bg-white border border-red-100 rounded-2xl shadow-sm px-4 py-2.5">
+          <span class="text-sm font-medium text-gray-700">{{ t('products.selected_count', { count: selectedIds.length }) }}</span>
+          <div class="flex items-center gap-2">
+            <button @click="clearSelection" :disabled="bulkDeleting" class="px-3 py-1.5 border border-gray-200 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-50 disabled:opacity-60 transition-colors">
+              {{ t('products.clear_selection') }}
+            </button>
+            <button @click="deleteSelected" :disabled="bulkDeleting" class="px-3 py-1.5 bg-red-500 text-white rounded-lg text-xs font-semibold hover:bg-red-600 disabled:opacity-60 transition-colors">
+              {{ bulkDeleting ? t('products.bulk_deleting') : t('products.delete_selected') }}
+            </button>
+          </div>
+        </div>
+
         <!-- MOBİL: Kart listesi -->
         <div class="md:hidden space-y-2">
+          <label class="flex items-center gap-2 px-1 text-xs text-gray-500 cursor-pointer">
+            <input type="checkbox" :checked="allPageSelected" :indeterminate="somePageSelected" @change="togglePage" class="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-300" />
+            <span>{{ t('products.select_page') }}</span>
+          </label>
           <div
             v-for="p in products"
             :key="p.id"
             class="bg-white rounded-2xl shadow-sm p-4"
+            :class="isSelected(p.id) ? 'ring-2 ring-orange-300' : ''"
           >
             <div class="flex items-start gap-3">
+              <input type="checkbox" :checked="isSelected(p.id)" @change="toggleSelect(p.id)" :aria-label="p.name" class="mt-1 w-4 h-4 shrink-0 rounded border-gray-300 text-orange-500 focus:ring-orange-300" />
               <img v-if="p.image" :src="p.image" class="w-14 h-14 rounded-xl object-cover shrink-0" />
               <div v-else class="w-14 h-14 rounded-xl bg-gray-100 shrink-0 flex items-center justify-center">
                 <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -127,6 +146,9 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-gray-100">
+                <th class="pl-4 pr-1 py-3 w-8">
+                  <input type="checkbox" :checked="allPageSelected" :indeterminate="somePageSelected" @change="togglePage" :title="t('products.select_page')" class="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-300 cursor-pointer" />
+                </th>
                 <th class="text-center px-3 py-3 text-gray-500 font-medium w-16">Sıra</th>
                 <th class="text-left px-4 py-3 text-gray-500 font-medium">{{ t('common.name') }}</th>
                 <th class="text-left px-4 py-3 text-gray-500 font-medium">{{ t('common.category') }}</th>
@@ -136,7 +158,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="p in products" :key="p.id" class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+              <tr v-for="p in products" :key="p.id" class="border-b border-gray-50 hover:bg-gray-50 transition-colors" :class="isSelected(p.id) ? 'bg-orange-50' : ''">
+                <td class="pl-4 pr-1 py-3">
+                  <input type="checkbox" :checked="isSelected(p.id)" @change="toggleSelect(p.id)" :aria-label="p.name" class="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-300 cursor-pointer" />
+                </td>
                 <td class="px-3 py-3 text-center">
                   <input
                     type="number" min="0"
@@ -438,6 +463,10 @@ const loading = ref(true)
 const showModal = ref(false)
 const saving = ref(false)
 const translating = ref(false)
+const bulkDeleting = ref(false)
+const selectedIds = ref<number[]>([])
+const allPageSelected = computed(() => products.value.length > 0 && products.value.every((p) => selectedIds.value.includes(p.id)))
+const somePageSelected = computed(() => !allPageSelected.value && products.value.some((p) => selectedIds.value.includes(p.id)))
 const editingProduct = ref<Product | null>(null)
 const activeTab = ref('')
 
@@ -649,7 +678,62 @@ async function toggleInStock(p: Product) {
 async function deleteProduct(id: number) {
   if (!await confirm(t('products.confirm_delete'), { title: t('products.title'), confirmText: t('common.delete'), type: 'danger' })) return
   await http.delete(`/admin/products/${id}`)
+  selectedIds.value = selectedIds.value.filter((x) => x !== id)
+  await reloadAfterDelete()
+}
+
+// Silme sonrası sayfa boş kaldıysa bir önceki sayfaya döner
+async function reloadAfterDelete() {
   await loadProducts()
+  if (products.value.length === 0 && currentPage.value > 1) {
+    currentPage.value = Math.min(currentPage.value - 1, Math.max(1, lastPage.value))
+    await loadProducts()
+  }
+}
+
+function isSelected(id: number) {
+  return selectedIds.value.includes(id)
+}
+
+function toggleSelect(id: number) {
+  selectedIds.value = isSelected(id)
+    ? selectedIds.value.filter((x) => x !== id)
+    : [...selectedIds.value, id]
+}
+
+function togglePage() {
+  const pageIds = products.value.map((p) => p.id)
+  if (allPageSelected.value) {
+    selectedIds.value = selectedIds.value.filter((id) => !pageIds.includes(id))
+  } else {
+    selectedIds.value = [...new Set([...selectedIds.value, ...pageIds])]
+  }
+}
+
+function clearSelection() {
+  selectedIds.value = []
+}
+
+async function deleteSelected() {
+  const ids = [...selectedIds.value]
+  if (ids.length === 0) return
+  if (!await confirm(t('products.bulk_delete_confirm', { count: ids.length }), { title: t('products.title'), confirmText: t('common.delete'), type: 'danger' })) return
+  bulkDeleting.value = true
+  try {
+    let deleted = 0
+    // Sunucu tek istekte en fazla 500 id kabul ediyor
+    for (let i = 0; i < ids.length; i += 500) {
+      const res = await http.post('/admin/products/bulk-delete', { ids: ids.slice(i, i + 500) })
+      deleted += res.data.deleted ?? 0
+    }
+    selectedIds.value = []
+    success(t('products.bulk_delete_done', { count: deleted }))
+  } catch {
+    toastError(t('products.bulk_delete_error'))
+  } finally {
+    bulkDeleting.value = false
+    await reloadAfterDelete()
+  }
 }
 
 function formatPrice(v: number) {

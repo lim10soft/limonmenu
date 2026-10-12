@@ -36,6 +36,7 @@
     price: 'Prezzo (₺) *', description: 'Descrizione predefinita', image_url: 'URL immagine',
     translations_label: 'Traduzioni', confirm_delete: 'Sei sicuro di voler eliminare questo prodotto?',
     parent_label: 'Categoria Genitore', no_parent: 'Nessuna (categoria radice)', span_label: 'Larghezza Scheda', span_normal: 'Normale', span_wide: 'Larga', span_desc: 'La scheda larga occupa tutta la riga.', wide: 'Larga',
+    selected_count: '{count} prodotti selezionati', clear_selection: 'Cancella selezione', delete_selected: 'Elimina selezionati', bulk_deleting: 'Eliminazione...', select_page: 'Seleziona tutti in questa pagina', bulk_delete_confirm: '{count} prodotti verranno eliminati. Sei sicuro?', bulk_delete_done: '{count} prodotti eliminati.', bulk_delete_error: 'Eliminazione multipla non riuscita.',
   },
   categories: {
     title: 'Categorie', add: '+ Aggiungi categoria',

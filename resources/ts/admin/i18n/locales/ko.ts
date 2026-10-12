@@ -36,6 +36,7 @@
     price: '가격 (₺) *', description: '기본 설명', image_url: '이미지 URL',
     translations_label: '번역', confirm_delete: '이 상품을 삭제하시겠습니까?',
     parent_label: '상위 카테고리', no_parent: '없음 (루트 카테고리)', span_label: '카드 너비', span_normal: '보통', span_wide: '넓게', span_desc: '넓은 카드는 전체 행을 차지합니다.', wide: '넓게',
+    selected_count: '상품 {count}개 선택됨', clear_selection: '선택 해제', delete_selected: '선택 항목 삭제', bulk_deleting: '삭제 중...', select_page: '이 페이지 전체 선택', bulk_delete_confirm: '상품 {count}개가 삭제됩니다. 계속하시겠습니까?', bulk_delete_done: '상품 {count}개가 삭제되었습니다.', bulk_delete_error: '일괄 삭제에 실패했습니다.',
   },
   categories: {
     title: '카테고리', add: '+ 카테고리 추가',

@@ -36,6 +36,7 @@
     price: '价格 (₺) *', description: '默认描述', image_url: '图片链接',
     translations_label: '翻译', confirm_delete: '确定要删除此产品吗？',
     parent_label: '父分类', no_parent: '无（根分类）', span_label: '卡片宽度', span_normal: '普通', span_wide: '宽', span_desc: '宽卡片占满整行。', wide: '宽',
+    selected_count: '已选择 {count} 个产品', clear_selection: '清除选择', delete_selected: '删除所选', bulk_deleting: '正在删除...', select_page: '选择本页全部', bulk_delete_confirm: '将删除 {count} 个产品。确定吗？', bulk_delete_done: '已删除 {count} 个产品。', bulk_delete_error: '批量删除失败。',
   },
   categories: {
     title: '分类', add: '+ 添加分类',

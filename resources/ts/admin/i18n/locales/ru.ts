@@ -35,6 +35,7 @@
     name: 'Название по умолчанию *', category: 'Категория *',
     price: 'Цена (₺) *', description: 'Описание по умолчанию', image_url: 'URL изображения',
     translations_label: 'Переводы', confirm_delete: 'Вы уверены, что хотите удалить этот продукт?',
+    selected_count: 'Выбрано продуктов: {count}', clear_selection: 'Снять выбор', delete_selected: 'Удалить выбранные', bulk_deleting: 'Удаление...', select_page: 'Выбрать все на этой странице', bulk_delete_confirm: 'Будет удалено продуктов: {count}. Вы уверены?', bulk_delete_done: 'Удалено продуктов: {count}.', bulk_delete_error: 'Не удалось выполнить массовое удаление.',
   },
   categories: {
     title: 'Категории', add: '+ Добавить категорию',

@@ -36,6 +36,7 @@
     price: '価格 (₺) *', description: 'デフォルト説明', image_url: '画像URL',
     translations_label: '翻訳', confirm_delete: 'この商品を削除してもよろしいですか？',
     parent_label: '親カテゴリ', no_parent: 'なし（ルートカテゴリ）', span_label: 'カード幅', span_normal: '標準', span_wide: 'ワイド', span_desc: 'ワイドカードは行全体を占めます。', wide: 'ワイド',
+    selected_count: '{count} 件の商品を選択中', clear_selection: '選択を解除', delete_selected: '選択項目を削除', bulk_deleting: '削除中...', select_page: 'このページをすべて選択', bulk_delete_confirm: '{count} 件の商品を削除します。よろしいですか？', bulk_delete_done: '{count} 件の商品を削除しました。', bulk_delete_error: '一括削除に失敗しました。',
   },
   categories: {
     title: 'カテゴリ', add: '+ カテゴリを追加',

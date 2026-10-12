@@ -65,6 +65,7 @@ Route::prefix('admin')->group(function () {
         Route::patch('categories/{id}', [CategoryController::class, 'update']);
 
         Route::post('products/auto-translate', [TranslateController::class, 'autoTranslateAll']);
+        Route::post('products/bulk-delete', [ProductController::class, 'bulkDestroy']);
         Route::apiResource('products', ProductController::class)->only(['index', 'store', 'destroy']);
         Route::put('products/{id}', [ProductController::class, 'update']);
         Route::patch('products/{id}', [ProductController::class, 'update']);

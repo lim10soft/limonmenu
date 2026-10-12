@@ -46,6 +46,7 @@ export default {
     name: 'სტანდარტული სახელი *', category: 'კატეგორია *',
     price: 'ფასი *', description: 'სტანდარტული აღწერა', image_url: 'სურათის URL',
     translations_label: 'თარგმანები', confirm_delete: 'დარწმუნებული ხართ, რომ გინდათ ამ პროდუქტის წაშლა?',
+    selected_count: 'არჩეულია {count} პროდუქტი', clear_selection: 'არჩევის გასუფთავება', delete_selected: 'არჩეულის წაშლა', bulk_deleting: 'იშლება...', select_page: 'ამ გვერდზე ყველას არჩევა', bulk_delete_confirm: 'წაიშლება {count} პროდუქტი. დარწმუნებული ხართ?', bulk_delete_done: 'წაიშალა {count} პროდუქტი.', bulk_delete_error: 'მასობრივი წაშლა ვერ მოხერხდა.',
   },
   categories: {
     title: 'კატეგორიები', add: '+ კატეგორიის დამატება',
