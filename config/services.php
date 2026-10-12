@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    // LimonPOS kurulumunun tenant oluştururken gönderdiği gizli anahtar;
+    // config:cache açıkken env() boş döndüğü için burada okunur
+    'provision' => [
+        'secret' => env('PROVISION_SECRET'),
+    ],
+
 ];

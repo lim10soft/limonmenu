@@ -22,7 +22,7 @@ class AdminTenantController extends Controller
 {
     public function provision(Request $request)
     {
-        $secret = env('PROVISION_SECRET');
+        $secret = config('services.provision.secret') ?: env('PROVISION_SECRET');
         if (!$secret || $request->header('X-Provision-Secret') !== $secret) {
             return response()->json(['error' => 'Yetkisiz'], 401);
         }
@@ -87,7 +87,7 @@ class AdminTenantController extends Controller
 
     public function syncAssets(Request $request)
     {
-        $secret = env('PROVISION_SECRET');
+        $secret = config('services.provision.secret') ?: env('PROVISION_SECRET');
         if (!$secret || $request->header('X-Provision-Secret') !== $secret) {
             return response()->json(['error' => 'Yetkisiz'], 401);
         }
